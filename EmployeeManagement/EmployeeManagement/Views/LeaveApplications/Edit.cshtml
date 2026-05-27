@@ -1,0 +1,89 @@
+﻿@model EmployeeManagement.Models.LeaveApplication
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="row">
+    <div class="col-xl-12 mx-auto">
+        <div class="card border-top border-0 border-4 border-info">
+            <div class="card-body">
+                <div class="border p-4 rounded">
+                    <div class="card-title d-flex align-items-center">
+                        <div>
+                            <i class="bx bxs-user me-1 font-22 text-info"></i>
+                        </div>
+                        <h5 class="mb-0 text-info">Leave Application</h5>
+                    </div>
+                    <hr />
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <form asp-action="Edit">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" />
+                                <div class="row g-3">
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="EmployeeId" class="control-label"></label>
+                                        <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
+                                        <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="NoOfDays" class="control-label"></label>
+                                        <input asp-for="NoOfDays" class="form-control" />
+                                        <span asp-validation-for="NoOfDays" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="StartDate" class="control-label"></label>
+                                        <input asp-for="StartDate" class="form-control" />
+                                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="EndDate" class="control-label"></label>
+                                        <input asp-for="EndDate" class="form-control" />
+                                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="DurationId" class="control-label"></label>
+                                        <select asp-for="DurationId" class="form-control" asp-items="ViewBag.DurationId"></select>
+                                        <span asp-validation-for="DurationId" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="LeaveTypeId" class="control-label"></label>
+                                        <select asp-for="LeaveTypeId" class="form-control" asp-items="ViewBag.LeaveTypeId"></select>
+                                        <span asp-validation-for="LeaveTypeId" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="Attachment" class="control-label"></label>
+                                        <input asp-for="Attachment" class="form-control" />
+                                        <span asp-validation-for="Attachment" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="Description" class="control-label"></label>
+                                        <input asp-for="Description" class="form-control" />
+                                        <span asp-validation-for="Description" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="StatusId" class="control-label"></label>
+                                        <select asp-for="StatusId" class="form-control" asp-items="ViewBag.StatusId"></select>
+                                        <span asp-validation-for="StatusId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group p-lg-5">
+                                    <div class="col-md-12">
+                                        <a asp-action="Index" class="btn btn-warning float-left"><i class="bi bi-skip-backward-fill"></i> Back To List</a>
+                                        <button type="submit" class="btn btn-primary float-right"><i class="bi bi-floppy-fill"></i> Update Leave Application</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

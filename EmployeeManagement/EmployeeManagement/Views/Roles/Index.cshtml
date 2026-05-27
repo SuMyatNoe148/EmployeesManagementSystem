@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model IEnumerable<IdentityRole>
+
+@{
+    ViewData["Title"] = "System Roles";
+}
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i>  Add New Role
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Role No
+                        </th>
+                        <th>
+                            Role Name
+                        </th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                <div class="ms-auto">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary"> Actions</button>
+                                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                                            <span class="visually-hidden"></span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bx bxs-edit"></i> Edit
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a asp-action="UserRights" asp-route-id="@item.Id" class="dropdown-item" asp-controller="Profiles">
+                                                <i class="bi bi-lock"></i> Assign Rights
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

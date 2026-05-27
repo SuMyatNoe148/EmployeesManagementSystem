@@ -1,0 +1,112 @@
+﻿@model EmployeeManagement.ViewModels.SystemCodeDetailsViewModel
+
+@{
+    ViewData["Title"] = "System Code Details";
+}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="col-md-12">
+            <form asp-action="Index" enctype="multipart/form-data" class="form-vertical">
+                <div class="row">
+                    <div class="form-group col-md-6 mb-3">
+                        <label asp-for="Code" class="form-label">System Code</label>
+                        <input asp-for="Code" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-6 mb-3">
+                        <label asp-for="Description" class="form-label">Description</label>
+                        <input asp-for="Description" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success btn-block m-tb-10">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button"
+                                class="btn btn-secondary w-100"
+                                onclick="window.location.href='@Url.Action("Index", "Employees")'">
+
+                            <i class="bi bi-eraser"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i>  Add New System Code Details
+            </a>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.SystemCode)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Code)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedById)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedOn)
+                    </th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SystemCodeDetails)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.SystemCode.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Code)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="bx bxs-edit"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script>
+    $('button.btn-secondary').click(function () {
+
+        $('#example1').DataTable().search('').draw();
+
+    });
+</script>

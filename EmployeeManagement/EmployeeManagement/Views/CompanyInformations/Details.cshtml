@@ -1,0 +1,84 @@
+﻿@model EmployeeManagement.Models.CompanyInformation
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CompanyInformation</h4>
+    <hr />
+    <dl class="row">
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNo)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNo)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NSSFNO)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.NSSFNO)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NHIFNO)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.NHIFNO)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.KRAPIN)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.KRAPIN)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ContactPerson)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.ContactPerson)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Logo)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.Logo)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PostalCode)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.PostalCode)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.City.Id)
+        </td>
+        <th class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Country)
+        </th>
+        <td class = "col-sm-10">
+            @Html.DisplayFor(model => model.Country.Id)
+        </td>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index"><i class="bi bi-skip-backward-fill"></i> Back to List</a>
+</div>

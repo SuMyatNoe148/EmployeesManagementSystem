@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "System Users";
+}
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i>  Add New User
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Full Name
+                        </th>
+                        <th>
+                            Id No
+                        </th>
+                        <th>
+                            Role
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            PhoneNo
+                        </th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NationalId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PhoneNumber)
+                            </td>
+                            <td>
+                                <div class="ms-auto">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary"> Actions</button>
+                                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                                            <span class="visually-hidden"></span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bx bxs-edit"></i> Edit
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bx bxs-show"></i> View
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+
+                                            <a asp-action="ApproveLeave" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bi bi-check-all"></i> Approve
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+
+                                            <a asp-action="RejectLeave" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bi bi-ban"></i> Reject
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                           
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

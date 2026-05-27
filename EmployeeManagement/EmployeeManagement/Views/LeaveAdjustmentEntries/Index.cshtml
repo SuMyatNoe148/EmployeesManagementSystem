@@ -1,0 +1,65 @@
+﻿@model IEnumerable<EmployeeManagement.Models.LeaveAdjustmentEntry>
+
+@{
+    ViewData["Title"] = "Leave Adjustments";
+}
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i>  Add New Employees Leave Adjustments
+            </a>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Employee)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.NoOfDays)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LeaveAdjustmentDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AdjustmentDescription)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AdjustmentType)
+                    </th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Employee.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NoOfDays)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeaveAdjustmentDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AdjustmentDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AdjustmentType.Description)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-sm"><i class="bx bxs-show"> View</i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

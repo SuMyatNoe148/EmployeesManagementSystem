@@ -1,0 +1,97 @@
+﻿@model EmployeeManagement.Models.ApprovalEntry
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="row">
+    <div class="col-xl-12 mx-auto">
+        <div class="card border-top border-0 border-4 border-info">
+            <div class="card-body">
+                <div class="border p-4 rounded">
+                    <div class="card-title d-flex align-items-center">
+                        <div>
+                            <i class="bx bxs-user me-1 font-22 text-info"></i>
+                        </div>
+                        <h5 class="mb-0 text-info">Approval Entry Details</h5>
+                    </div>
+                    <hr />
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.RecordId)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.RecordId)
+                                    </td>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.DocumentTypeId)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.DocumentType.Description)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.SequenceNo)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.SequenceNo)
+                                    </td>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.Approver)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.Approver.FullName)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.Status)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.Status.Description)
+                                    </td>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.DateSentForApproval)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.DateSentForApproval)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.LastModifiedOn)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.LastModifiedOn)
+                                    </td>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.LastModifiedById)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.LastModifiedBy.FullName)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="col-sm-3">
+                                        @Html.DisplayNameFor(model => model.comments)
+                                    </th>
+                                    <td class="col-sm-3">
+                                        @Html.DisplayFor(model => model.comments)
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group p-lg-5">
+                        <div class="col-md-12">
+                            <a asp-action="Index" class="btn btn-warning float-left"><i class="bi bi-skip-backward-fill"></i>  Back To List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

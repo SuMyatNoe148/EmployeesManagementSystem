@@ -1,0 +1,71 @@
+﻿@model IEnumerable<EmployeeManagement.Models.Employee>
+
+@{
+    ViewData["Title"] = "Leave Balances";
+}
+<div class="card">
+        <div class="card-header">
+            </div>
+        </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmpNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.AllocatedLeaveDays)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LeaveOutstandingBalance)
+                    </th>
+                    <th>Action</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmpNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AllocatedLeaveDays)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeaveOutstandingBalance)
+                        </td>
+                        <td>
+                            <div class="ms-auto">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary"> Actions</button>
+                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                                        <span class="visually-hidden"></span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
+                                            <i class="bx bxs-show"></i> View
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a asp-action="AdjustLeaveBalance" asp-route-id="@item.Id" class="dropdown-item">
+                                            <i class="bx bxs-lock-alt"></i> Adjust
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

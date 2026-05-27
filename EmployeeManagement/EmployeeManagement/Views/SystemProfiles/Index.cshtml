@@ -1,0 +1,78 @@
+﻿@model IEnumerable<EmployeeManagement.Models.SystemProfile>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i>  Add New Profile
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Profile)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Order)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedById)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedOn)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModifiedById)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ModifiedOn)
+                    </th>
+                    <th>Actions</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Profile.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Order)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedBy.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModifiedById)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ModifiedOn)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="bx bxs-edit"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

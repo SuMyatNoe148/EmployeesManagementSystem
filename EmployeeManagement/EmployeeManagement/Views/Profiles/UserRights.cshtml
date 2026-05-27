@@ -1,0 +1,140 @@
+﻿@model EmployeeManagement.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Assign User Rights";
+}
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <form asp-action="UserGroupRights" class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="RoleId" class="control-label"></label>
+                                <select asp-for="RoleId" class="form-control onchange" asp-items="ViewBag.RoleId"></select>
+                                <a class="currentrooturl" href="~/Profiles/UserRights/"></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="tree">
+                            <ul id="treeview" class="hummingbird-base">
+                                <li>
+                                    <i class="fadeIn animated bx bx-right-arrow"></i>
+                                    <input class="grandparent" rel="0" value="0" name="AllRights[]" type="checkbox" />
+                                    <i class="fadeIn animated bx bx-folder-open"></i> All Modules
+                                    <ul>
+                                        @foreach(var item in Model.Profile)
+                                        {
+                                            <li id="li_@item.Id" class="folder">
+
+                                                <i class="fas fa-folder"></i>
+
+                                                @if (Model.RolesRightsIds.Contains(item.Id))
+                                                {
+                                                    <input class="parent" rel="@item.Id" value="@item.Id" name="Ids[]" type="checkbox" checked="checked" />
+                                                }
+                                                else
+                                                {
+                                                    <input class="parent" rel="@item.Id" value="@item.Id" name="Ids[]" type="checkbox" />
+                                                }
+
+                                                <i class="fadeIn animated bx bx-folder-open"></i> <span> @item.Name</span>
+                                                <ul>
+                                                    @foreach (var child in item.Children.OrderBy(c => c.Order))
+                                                    {
+                                                        <li id="li_@child.Id">
+
+                                                            @if (Model.RolesRightsIds.Contains(child.Id))
+                                                            {
+                                                                <input class="parent" rel="@child.Id" value="@child.Id" name="Ids[]" type="checkbox" checked="checked" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input class="parent" rel="@child.Id" value="@child.Id" name="Ids[]" type="checkbox" />
+                                                            }
+
+                                                            @if (!child.Children.Any())
+                                                            {
+                                                                <i class="bi bi-lock-fill"></i>
+                                                                @child.Name
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="fadeIn animated bx bx-folder-open"></i>
+
+                                                                <span>@child.Name</span>
+
+                                                                <ul>
+                                                                    @foreach (var childInner in child.Children.OrderBy(c => c.Order))
+                                                                    {
+                                                                        <li class="file">
+
+                                                                            @if (Model.RolesRightsIds.Contains(childInner.Id))
+                                                                            {
+                                                                                <input class="child" rel="@childInner.Id" value="@childInner.Id" name="Ids[]" type="checkbox" checked="checked" />
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <input class="child" rel="@childInner.Id" value="@childInner.Id" name="Ids[]" type="checkbox" />
+                                                                            }
+
+                                                                            <i class="bi bi-lock-fill"></i>
+                                                                            @childInner.Name
+
+                                                                        </li>
+                                                                    }
+                                                                </ul>
+                                                            }
+
+                                                        </li>
+                                                    }
+                                                </ul>
+
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group p-lg-5">
+                        <div class="col-md-12">
+                            <a asp-action="Index" class="btn btn-warning float-start"><i class="bi bi-skip-backward-fill"></i> Back To List</a>
+                            <button type="submit" class="btn btn-primary float-end"><i class="bi bi-save"></i> Assign Rights</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        // DROPDOWN CHANGE
+        $('.onchange').on('change', function () {
+
+            window.location =
+                $('.currentrooturl').attr('href') +
+                $('.onchange option:selected').val();
+
+        });
+
+        // CHECKBOX PARENT & CHILD
+        $('input.parent,input.grandparent,input.child')
+            .change(function () {
+
+                $(this)
+                    .siblings()
+                    .find("input[type='checkbox']")
+                    .prop('checked', this.checked);
+
+            });
+
+    </script>
+
+}

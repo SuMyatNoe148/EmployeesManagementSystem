@@ -1,0 +1,119 @@
+﻿@model IEnumerable<EmployeeManagement.Models.LeaveApplication>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i>  Add New Leave Application
+            </a>
+        </div>
+    </div class="card-body">
+        <div class="table-responsive">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Employee)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NoOfDays)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.StartDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.EndDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Duration)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.LeaveType)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Employee.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NoOfDays)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Duration.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LeaveType.Name)
+                            </td>
+                            <td>
+                                @if(item.Status.Code == "Approved")
+                                {
+                                <span class="badge rounded-pill bg-success">
+                                @Html.DisplayFor(modelItem => item.Status.Description)
+                                </span>
+                                }
+                                else if(item.Status.Code == "Rejected")
+                                {
+                                    <span class="badge rounded-pill bg-danger">
+                                    @Html.DisplayFor(modelItem => item.Status.Description)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge rounded-pill bg-warning">
+                                    @Html.DisplayFor(modelItem => item.Status.Description)
+                                    </span>
+                                }
+                        </td>
+                            <td>
+                                <div class="ms-auto">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary"> Actions</button>
+                                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                                            <span class="visually-hidden"></span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                                            <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bx bxs-edit"></i> Edit
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bx bxs-show"></i> View
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a asp-action="ApproveLeave" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bx bxs-check-circle"></i> Approve
+                                            </a>
+                                            <div class="dropdown-divider"></div>
+                                            <a asp-action="RejectLeave" asp-route-id="@item.Id" class="dropdown-item">
+                                                <i class="bx bxs-check-shield"></i> Reject
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

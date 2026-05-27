@@ -1,0 +1,134 @@
+﻿@model EmployeeManagement.ViewModels.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Employees List";
+}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="col-md-12">
+            <form asp-action="Index" enctype="multipart/form-data" class="form-vertical">
+                <div class="row">
+                    <div class="form-group col-md-3 mb-3">
+                        <label asp-for="EmpNo" class="form-label">Employee No</label>
+                        <input asp-for="EmpNo" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-3 mb-3">
+                        <label asp-for="FullName" class="form-label">Full Name</label>
+                        <input asp-for="FullName" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-3 mb-3">
+                        <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                    </div>
+                    <div class="form-group col-md-3 mb-3">
+                        <label asp-for="EmailAddress" class="form-label">Email Address</label>
+                        <input asp-for="EmailAddress" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button"
+                                class="btn btn-secondary w-100"
+                                onclick="window.location.href='@Url.Action("Index", "Employees")'">
+
+                            <i class="bi bi-eraser"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-square"></i> Add New Employee</a>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmpNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EmailAddress)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.LeaveOutstandingBalance)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.StatusId)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Employees)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmpNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmailAddress)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LeaveOutstandingBalance)
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill bg-success">
+                                @Html.DisplayFor(modelItem => item.Status.Description)
+                            </span>
+                        </td>
+                        <td>
+                            <div class="ms-auto">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary"> Actions</button>
+                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                                        <span class="visually-hidden"></span>
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
+                                            <i class="bx bxs-edit"></i> Edit
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
+                                            <i class="bx bxs-show"></i> View
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $('button.btn-secondary').click(function () {
+
+        $('#example1').DataTable().search('').draw();
+
+    });
+</script>
