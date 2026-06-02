@@ -63,7 +63,6 @@
                         <th>ID No</th>
                         <th>Role</th>
                         <th>Contact</th>
-                        <th class="text-center" style="width: 140px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,13 +110,7 @@
                                 <td><span class="text-muted">@item.NationalId</span></td>
                                 <td><span class="role-badge">@item.Role?.Name</span></td>
                                 <td><span class="text-muted"><i class="bx bx-phone mr-1"></i>@item.PhoneNumber</span></td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary action-btn" data-toggle="tooltip" title="Edit"><i class="bx bx-edit"></i></a>
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info action-btn" data-toggle="tooltip" title="View"><i class="bx bx-show"></i></a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger action-btn" data-toggle="tooltip" title="Delete"><i class="bx bx-trash"></i></a>
-                                    </div>
-                                </td>
+                                
                             </tr>
                         }
                     }
