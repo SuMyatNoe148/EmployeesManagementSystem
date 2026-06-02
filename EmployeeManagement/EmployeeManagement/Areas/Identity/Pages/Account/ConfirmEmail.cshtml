@@ -1,8 +1,87 @@
 ﻿@page
 @model ConfirmEmailModel
 @{
-    ViewData["Title"] = "Confirm email";
+    ViewData["Title"] = "Email Confirmed";
+    Layout = null;
 }
 
-<h1>@ViewData["Title"]</h1>
-<partial name="_StatusMessage" model="Model.StatusMessage" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - EMS</title>
+    <link rel="stylesheet" href="~/css/customstyle.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class='bx bx-briefcase'></i>
+                </div>
+            </div>
+            <h1 class="app-name">EMS</h1>
+            <p class="app-tagline">Employee Management System</p>
+        </div>
+
+        <div class="login-body">
+            <div class="success-content">
+                <div class="success-icon-large">
+                    <i class='bx bx-check-circle'></i>
+                </div>
+                <h2 class="success-title">Email Confirmed!</h2>
+                <p class="success-message">@Model.StatusMessage</p>
+                <div class="success-actions">
+                    <a href="/Identity/Account/Login" class="btn-login">
+                        <i class='bx bx-log-in'></i>
+                        Proceed to Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .success-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .success-icon-large {
+            font-size: 80px;
+            color: #10b981;
+            margin-bottom: 20px;
+        }
+        .success-icon-large i {
+            animation: scaleIn 0.5s ease;
+        }
+        @@keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        .success-title {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .success-message {
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .success-actions {
+            margin-top: 30px;
+        }
+        .success-actions .btn-login {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 30px;
+            font-size: 16px;
+        }
+    </style>
+</body>
+</html>

@@ -61,6 +61,30 @@
                         <i class='bx bx-show password-toggle' id="togglePassword" onclick="togglePassword('passwordInput', 'togglePassword')"></i>
                     </div>
                     
+                    <!-- Password Requirements -->
+                    <div class="password-requirements" id="passwordRequirements">
+                        <div class="requirement-item" id="req-length">
+                            <i class='bx bx-x-circle'></i>
+                            <span>At least 6 characters</span>
+                        </div>
+                        <div class="requirement-item" id="req-uppercase">
+                            <i class='bx bx-x-circle'></i>
+                            <span>One uppercase letter (A-Z)</span>
+                        </div>
+                        <div class="requirement-item" id="req-lowercase">
+                            <i class='bx bx-x-circle'></i>
+                            <span>One lowercase letter (a-z)</span>
+                        </div>
+                        <div class="requirement-item" id="req-digit">
+                            <i class='bx bx-x-circle'></i>
+                            <span>One digit (0-9)</span>
+                        </div>
+                        <div class="requirement-item" id="req-special">
+                            <i class='bx bx-x-circle'></i>
+                            <span>One special character (!@@#$%^&*)</span>
+                        </div>
+                    </div>
+                    
                     <div class="input-group-register">
                         <i class='bx bx-lock input-icon'></i>
                         <input asp-for="Input.ConfirmPassword" id="confirmPasswordInput" class="form-control form-control-register" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
@@ -140,15 +164,56 @@
             }
         });
 
+        function validatePassword(password) {
+            var hasMinLength = password.length >= 6;
+            var hasUppercase = /[A-Z]/.test(password);
+            var hasLowercase = /[a-z]/.test(password);
+            var hasDigit = /\d/.test(password);
+            var hasSpecial = /[!@@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            return {
+                length: hasMinLength,
+                uppercase: hasUppercase,
+                lowercase: hasLowercase,
+                digit: hasDigit,
+                special: hasSpecial,
+                allValid: hasMinLength && hasUppercase && hasLowercase && hasDigit && hasSpecial
+            };
+        }
+
+        function updateRequirement(id, isValid) {
+            var element = document.getElementById(id);
+            if (element) {
+                var icon = element.querySelector('i');
+                if (isValid) {
+                    element.classList.add('valid');
+                    element.classList.remove('invalid');
+                    icon.className = 'bx bx-check-circle';
+                } else {
+                    element.classList.add('invalid');
+                    element.classList.remove('valid');
+                    icon.className = 'bx bx-x-circle';
+                }
+            }
+        }
+
         function validateForm() {
             var password = document.getElementById('passwordInput').value;
             var confirmPassword = document.getElementById('confirmPasswordInput').value;
             var email = document.getElementById('emailInput').value;
             var submitBtn = document.getElementById('submitBtn');
             
-            // Enable button if all fields filled and passwords match
+            // Check password requirements
+            var validation = validatePassword(password);
+            updateRequirement('req-length', validation.length);
+            updateRequirement('req-uppercase', validation.uppercase);
+            updateRequirement('req-lowercase', validation.lowercase);
+            updateRequirement('req-digit', validation.digit);
+            updateRequirement('req-special', validation.special);
+            
+            // Enable button if all fields filled, password valid, and passwords match
             var passwordsMatch = password === confirmPassword && password !== '' && confirmPassword !== '';
-            submitBtn.disabled = !(email && password && passwordsMatch);
+            submitBtn.disabled = !(email && validation.allValid && passwordsMatch);
         }
 
         // Add event listeners

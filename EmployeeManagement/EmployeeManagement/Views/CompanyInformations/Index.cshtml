@@ -1,71 +1,168 @@
 ﻿@model IEnumerable<EmployeeManagement.Models.CompanyInformation>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Company Information";
+    var totalCount = Model?.Count() ?? 0;
 }
 
-<h1>Company Information</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight:600;color:#2d3748;">
+            <i class="bx bx-building-house mr-2" style="color:#667eea;"></i>
+            Company Information
+        </h2>
+        <p class="text-muted mb-0">
+            Manage company profiles and contact information
+        </p>
+    </div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-square"></i>  Create Company Information</a>
+    <a asp-action="Create"
+       class="btn btn-primary"
+       style="border-radius:10px;padding:12px 24px;font-weight:500;">
+        <i class="bx bx-plus mr-2"></i>Add Company
+    </a>
+</div>
 
-</p>
-<table id="example1" class="table table-bordered table-striped table-hover">
+<div class="row mb-4">
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card stats-card"
+             style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity:.9;font-size:14px;">
+                            Total Companies
+                        </p>
 
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KRAPIN)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th>Edit</th>
-            <th>View</th>
+                        <h3 class="mb-0"
+                            style="font-size:32px;font-weight:700;">
+                            @totalCount
+                        </h3>
+                    </div>
 
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+                    <div style="background:rgba(255,255,255,.2);
+                                width:60px;
+                                height:60px;
+                                border-radius:12px;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;">
+                        <i class="bx bx-buildings"
+                           style="font-size:28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="card main-card">
+    <div class="card-body p-0">
+        <div class="p-4 border-bottom" style="background:#fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"
+                                  style="border-radius:10px 0 0 10px;">
+                                <i class="bx bx-search text-muted"></i>
+                            </span>
+                        </div>
+
+                        <input type="text"
+                               id="searchBox"
+                               class="form-control border-left-0 search-box"
+                               placeholder="Search companies..."
+                               style="border-radius:0 10px 10px 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
+                    <tr>
+                        <th><i class='bx bx-buildings'></i> Company Name</th>
+                        <th><i class='bx bx-map'></i> Address</th>
+                        <th><i class='bx bx-phone'></i> Phone</th>
+                        <th><i class='bx bx-id-card'></i> KRA PIN</th>
+                        <th><i class='bx bx-map-pin'></i> City</th>
+                        <th><i class='bx bx-globe'></i> Country</th>
+                        <th class="text-center"><i class='bx bx-cog'></i> Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <span style="font-weight:600;color:#2d3748;">
+                                        @item.Name
+                                    </span>
+                                </div>
+                            </td>
+                            <td>@item.Address</td>
+                            <td>
+                                <span class="text-muted">
+                                    <i class="bx bx-phone mr-1"></i>@item.PhoneNo
+                                </span>
+                            </td>
+                            <td>
+                                <span class="category-badge">
+                                    @item.KRAPIN
+                                </span>
+                            </td>
+                            <td>
+                                <span class="role-badge">
+                                    <i class="bx bx-map-pin mr-1"></i>
+                                    @item.City.Name
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-dark">
+                                    <i class='bx bx-globe'></i> @item.Country.Name
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center" style="gap:8px;">
+
+                                    <a asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-outline-info action-btn"
+                                       title="View">
+                                        <i class="bx bx-show"></i>
+                                    </a>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-outline-primary action-btn"
+                                       title="Edit">
+                                        <i class="bx bx-edit"></i>
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-outline-danger action-btn"
+                                       title="Delete">
+                                        <i class="bx bx-trash"></i>
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (totalCount > 0)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.KRAPIN)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.City.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Country.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="fas fa-edit mr-1"></i></a>
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="fas fa-eye mr-1"></i></a>
-                </td>
-            </tr>
+            <div class="p-3 border-top" style="background:#fafbfc;">
+                <small class="text-muted">
+                    Showing <strong>@totalCount</strong> compan@(totalCount == 1 ? "y" : "ies")
+                </small>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>

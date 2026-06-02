@@ -85,7 +85,17 @@
                     {
                         @foreach (var item in Model)
                         {
-                            var initials = string.Concat(item.FullName?.Split(' ').Select(n => n[0]).Take(2))?.ToUpper() ?? "US";
+                            var initials = string.Concat(
+                            (item.FullName ?? "")
+                            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(n => n[0])
+                            .Take(2)
+                            ).ToUpper();
+
+                            if (string.IsNullOrEmpty(initials))
+                            {
+                                initials = "US";
+                            }
                             var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c" };
                             var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
                             <tr class="data-row">

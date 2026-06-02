@@ -62,10 +62,52 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                try
+                {
+                    var emailSubject = "EMS - Reset Your Password";
+                    var emailBody = $@"<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+        .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+        .header {{ background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+        .header h1 {{ margin: 0; font-size: 24px; }}
+        .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+        .button {{ display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: bold; }}
+        .footer {{ text-align: center; color: #999; font-size: 12px; margin-top: 20px; }}
+        .link {{ word-break: break-all; color: #667eea; }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>🏢 EMS - Employee Management System</h1>
+        </div>
+        <div class='content'>
+            <h2>Password Reset Request</h2>
+            <p>We received a request to reset your password. Click the button below to create a new password.</p>
+            <div style='text-align: center;'>
+                <a href='{HtmlEncoder.Default.Encode(callbackUrl)}' class='button'>Reset My Password</a>
+            </div>
+            <p>Or copy and paste this link in your browser:</p>
+            <p class='link'>{HtmlEncoder.Default.Encode(callbackUrl)}</p>
+            <p style='margin-top: 30px;'><strong>Note:</strong> This link will expire in 24 hours. If you didn't request a password reset, please ignore this email.</p>
+        </div>
+        <div class='footer'>
+            <p>© 2024 EMS Employee Management System. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>";
+                    
+                    await _emailSender.SendEmailAsync(Input.Email, emailSubject, emailBody);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, $"Failed to send password reset email: {ex.Message}. Please check your SMTP settings or try again later.");
+                    return Page();
+                }
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

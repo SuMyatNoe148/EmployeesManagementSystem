@@ -1,84 +1,189 @@
 ﻿@model IEnumerable<EmployeeManagement.Models.ApprovalEntry>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Approval Entries";
+    var totalCount = Model?.Count() ?? 0;
+    var pendingCount = Model?.Count(x => x.Status?.Code == "Pending") ?? 0;
+    var approvedCount = Model?.Count(x => x.Status?.Code == "Approved") ?? 0;
+    var rejectedCount = Model?.Count(x => x.Status?.Code == "Rejected") ?? 0;
 }
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Approval Entries List</h3>
+
+<!--Header-->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight:600;color:#2d3748;">
+            <i class="bx bx-check-double mr-2" style="color:#667eea;"></i>
+            Approval Entries
+        </h2>
+        <p class="text-muted mb-0">
+            Manage approval workflow entries
+        </p>
     </div>
-    <!-- /.card-header -->
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.RecordId)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DocumentType)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.SequenceNo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Approver)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Status)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DateSentForApproval)
-                        </th>
-                        <th>View</th>
-                        <th>Approve</th>
-                        <th>Reject</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RecordId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DocumentType.Description)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SequenceNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Approver.FullName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Status.Id)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateSentForApproval)
-                            </td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="bx bxs-show"></i> View</a>
-                            </td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="bx bxs-check-circle"></i> Approve</a>
-                            </td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-danger btn-sm"><i class="bi bi-x-circle-fill"></i> Reject</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Entries</p>
+                        <h3 class="mb-0" style="font-size: 28px; font-weight: 700;">@totalCount</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-list-check" style="font-size: 24px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Pending</p>
+                        <h3 class="mb-0" style="font-size: 28px; font-weight: 700;">@pendingCount</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-time" style="font-size: 24px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Approved</p>
+                        <h3 class="mb-0" style="font-size: 28px; font-weight: 700;">@approvedCount</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-check-circle" style="font-size: 24px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-3">
+        <div class="card stats-card"
+             style="background:linear-gradient(135deg,#ef4444 0%,#f87171 100%);color:white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity:.9;font-size:14px;">
+                            Rejected
+                        </p>
+                        <h3 class="mb-0" style="font-size:32px;font-weight:700;">
+                            @rejectedCount
+                        </h3>
+                    </div>
+
+                    <div style="background:rgba(255,255,255,.2);
+                            width:60px;
+                            height:60px;
+                            border-radius:12px;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;">
+                        <i class="bx bx-x-circle" style="font-size:28px;"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    $("#approvalTable").DataTable({
-        responsive: false,
-        autoWidth: false
-    });
-</script>
+<!-- Main Content -->
+<div class="card main-card">
+    <div class="card-body p-0">
+        <div class="p-4 border-bottom" style="background:#fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"
+                                  style="border-radius:10px 0 0 10px;">
+                                <i class="bx bx-search text-muted"></i>
+                            </span>
+                        </div>
 
+                        <input type="text"
+                               id="searchBox"
+                               class="form-control border-left-0 search-box"
+                               placeholder="Search approvals..."
+                               style="border-radius:0 10px 10px 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table id="dataTable" class="table table-hover mb-0" style="font-size: 14px;">
+            <thead class="table-header">
+                <tr>
+                    <th><i class='bx bx-hash'></i> Record ID</th>
+                    <th><i class='bx bx-file'></i> Document Type</th>
+                    <th><i class='bx bx-sort'></i> Sequence</th>
+                    <th><i class='bx bx-user'></i> Approver</th>
+                    <th><i class='bx bx-check-circle'></i> Status</th>
+                    <th><i class='bx bx-calendar'></i> Date Sent</th>
+                    <th class="text-center"><i class='bx bx-cog'></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var statusClass = item.Status?.Code switch
+                    {
+                        "Approved" => "status-approved",
+                        "Rejected" => "status-rejected",
+                        _ => "status-pending"
+                    };
+                    <tr>
+                        <td><span class="badge badge-light">#@item.RecordId</span></td>
+                        <td>@item.DocumentType.Description</td>
+                        <td><span class="badge badge-info">@item.SequenceNo</span></td>
+                        <td>
+                            <span class="badge badge-secondary">
+                                <i class='bx bx-user-circle'></i> @item.Approver.FullName
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge @statusClass">
+                                @item.Status.Description
+                            </span>
+                        </td>
+                        <td>@item.DateSentForApproval.ToString("MMM dd, yyyy")</td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info action-btn">
+                                    <i class="bx bx-show"></i>
+                                </a>
+                                @if (item.Status?.Code == "Pending")
+                                {
+                                    <a asp-action="Approve" asp-route-id="@item.Id" class="btn btn-outline-success action-btn">
+                                        <i class="bx bx-check"></i>
+                                    </a>
+                                    <a asp-action="Reject" asp-route-id="@item.Id" class="btn btn-outline-danger action-btn">
+                                        <i class="bx bx-x"></i>
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="p-3 border-top" style="background:#fafbfc;">
+        <small class="text-muted">
+            Showing <strong>@totalCount</strong> approval entr@(totalCount == 1 ? "y" : "ies")
+        </small>
+    </div>
+</div>

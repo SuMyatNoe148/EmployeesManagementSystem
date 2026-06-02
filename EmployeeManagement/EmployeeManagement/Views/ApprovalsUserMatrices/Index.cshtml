@@ -1,81 +1,188 @@
 ﻿@model IEnumerable<EmployeeManagement.Models.ApprovalsUserMatrix>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Approvals User Matrix";
+
+    var totalCount = Model?.Count() ?? 0;
+    var activeCount = Model?.Count(x => x.Active) ?? 0;
+    var inactiveCount = Model?.Count(x => !x.Active) ?? 0;
 }
 
-<div class="card">
-    <div class="card-header">
-        <div class="mb-3 float-right">
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-square"></i>  Add New Matrix
-            </a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight:600;color:#2d3748;">
+            <i class="bx bx-grid-alt mr-2" style="color:#667eea;"></i>
+            Approvals User Matrix
+        </h2>
+        <p class="text-muted mb-0">
+            Manage workflow approval assignments
+        </p>
+    </div>
+
+    <a asp-action="Create"
+       class="btn btn-primary"
+       style="border-radius:10px;padding:12px 24px;font-weight:500;">
+        <i class="bx bx-plus mr-2"></i>Add Matrix
+    </a>
+</div>
+
+<div class="row mb-4">
+
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card stats-card"
+             style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity:.9;font-size:14px;">Total Records</p>
+                        <h3 class="mb-0" style="font-size:32px;font-weight:700;">@totalCount</h3>
+                    </div>
+                    <div style="background:rgba(255,255,255,.2);width:60px;height:60px;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-grid-alt" style="font-size:28px;"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- /.card-header -->
-    <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.User)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DocumentType)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.WorkflowUserGroup)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Active)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreatedById)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreatedOn)
-                    </th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card stats-card"
+             style="background:linear-gradient(135deg,#10b981 0%,#34d399 100%);color:white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity:.9;font-size:14px;">Active</p>
+                        <h3 class="mb-0" style="font-size:32px;font-weight:700;">@activeCount</h3>
+                    </div>
+                    <div style="background:rgba(255,255,255,.2);width:60px;height:60px;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-check-circle" style="font-size:28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card stats-card"
+             style="background:linear-gradient(135deg,#ef4444 0%,#f87171 100%);color:white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity:.9;font-size:14px;">Inactive</p>
+                        <h3 class="mb-0" style="font-size:32px;font-weight:700;">@inactiveCount</h3>
+                    </div>
+                    <div style="background:rgba(255,255,255,.2);width:60px;height:60px;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bx bx-x-circle" style="font-size:28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Main Content -->
+<div class="card main-card">
+    <div class="card-body p-0">
+        <div class="p-4 border-bottom" style="background:#fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"
+                                  style="border-radius:10px 0 0 10px;">
+                                <i class="bx bx-search text-muted"></i>
+                            </span>
+                        </div>
+
+                        <input type="text"
+                               id="searchBox"
+                               class="form-control border-left-0 search-box"
+                               placeholder="Search matrix records..."
+                               style="border-radius:0 10px 10px 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.User.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DocumentType.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.WorkflowUserGroup.Description)
-                        </td>
-                        <td>
-                            @if (item.Active)
-                            {
-                                <span class="badge rounded-pill bg-gradient-success">
-                                    Yes
-                                </span>
-                            }else
-                            {
-                                <span class="badge rounded-pill bg-gradient-warning">
-                                    No
-                                </span>
-                            }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedBy.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedOn)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="bx bxs-edit"></i></a>
-                        </td>
+                        <th><i class='bx bx-user'></i> User</th>
+                        <th><i class='bx bx-file'></i> Document Type</th>
+                        <th><i class='bx bx-group'></i> Workflow Group</th>
+                        <th><i class='bx bx-check-circle'></i> Status</th>
+                        <th><i class='bx bx-user-check'></i> Created By</th>
+                        <th><i class='bx bx-calendar'></i> Created On</th>
+                        <th class="text-center"><i class='bx bx-cog'></i> Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="badge badge-info">
+                                    <i class='bx bx-user-circle'></i> @item.User.FullName
+                                </span>
+                            </td>
+                            <td>@item.DocumentType.Description</td>
+                            <td>@item.WorkflowUserGroup.Description</td>
+                            <td>
+                                @if (item.Active)
+                                {
+                                    <span class="status-badge status-approved">
+                                        Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-rejected">
+                                        Inactive
+                                    </span>
+                                }
+                                
+                            </td>
+                            <td>
+                                <span class="badge badge-light">
+                                    <i class='bx bx-user'></i> @item.CreatedBy.FullName
+                                </span>
+                            </td>
+                            <td>@item.CreatedOn.ToString("MMM dd, yyyy")</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center" style="gap:8px;">
+
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info action-btn"
+                                       title="View">
+                                        <i class="bx bx-show"></i>
+                                    </a>
+
+                                    <a asp-action="Edit"  asp-route-id="@item.Id" class="btn btn-outline-primary action-btn"
+                                       title="Edit">
+                                        <i class="bx bx-edit"></i>
+                                    </a>
+
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger action-btn"
+                                       title="Delete">
+                                        <i class="bx bx-trash"></i>
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (totalCount > 0)
+        {
+            <div class="p-3 border-top" style="background:#fafbfc;">
+                <small class="text-muted">
+                    Showing <strong>@totalCount</strong> record@(totalCount != 1 ? "s" : "")
+                </small>
+            </div>
+        }
     </div>
 </div>
