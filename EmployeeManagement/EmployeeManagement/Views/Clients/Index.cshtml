@@ -1,272 +1,140 @@
 @model IEnumerable<EmployeeManagement.Models.Client>
 
+
+
 @{
-    ViewData["Title"] = "Client Management";
-    var totalClients = Model?.Count() ?? 0;
-    var activeClients = Model?.Count(c => c.Status?.Description?.ToLower() == "active") ?? 0;
-    var inactiveClients = totalClients - activeClients;
+
+    ViewData["Title"] = "Clients List";
+
 }
 
-<!-- Page Header -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h2 class="mb-1" style="font-weight: 600; color: #2d3748;">
-            <i class="bx bx-briefcase-alt-2 mr-2" style="color: #667eea;"></i>Client Management
-        </h2>
-        <p class="text-muted mb-0">Manage your client relationships and information</p>
-    </div>
-    <a asp-action="Create" class="btn btn-primary" style="border-radius: 10px; padding: 12px 24px; font-weight: 500;">
-        <i class="bi bi-plus-lg mr-2"></i>Add New Client
-    </a>
-</div>
 
-<!-- Statistics Cards -->
-<div class="row mb-4">
-    <div class="col-xl-4 col-md-6 mb-3">
-        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Clients</p>
-                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@totalClients</h3>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                        <i class="bx bx-group" style="font-size: 28px;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4 col-md-6 mb-3">
-        <div class="card stats-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Active Clients</p>
-                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@activeClients</h3>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                        <i class="bx bx-check-circle" style="font-size: 28px;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4 col-md-12 mb-3">
-        <div class="card stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Inactive Clients</p>
-                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@inactiveClients</h3>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                        <i class="bx bx-pause-circle" style="font-size: 28px;"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Main Content Card -->
-<div class="card main-card">
-    <div class="card-body p-0">
-        <!-- Toolbar -->
-        <div class="p-4 border-bottom" style="background: #fafbfc;">
-            <div class="row align-items-center">
-                <div class="col-md-6 mb-2 mb-md-0">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text bg-white border-right-0" style="border-radius: 10px 0 0 10px;">
-                                <i class="bx bx-search text-muted"></i>
-                            </span>
-                        </div>
-                        <input type="text" id="clientSearch" class="form-control border-left-0 search-box" 
-                               placeholder="Search by name, code, email or phone..." style="border-radius: 0 10px 10px 0;">
-                    </div>
-                </div>
-                <div class="col-md-6 text-md-right">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-secondary" id="filterAll" style="border-radius: 8px 0 0 8px;">
-                            <i class="bx bx-list-ul mr-1"></i>All
-                        </button>
-                        <button type="button" class="btn btn-outline-success" id="filterActive">
-                            <i class="bx bx-check mr-1"></i>Active
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" id="filterInactive" style="border-radius: 0 8px 8px 0;">
-                            <i class="bx bx-pause mr-1"></i>Inactive
-                        </button>
-                    </div>
-                </div>
-            </div>
+<div class="card">
+
+    <div class="card-header">
+
+        <div class="mb-3 float-right">
+
+            <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-square"></i> Add New Client</a>
+
         </div>
 
-        <!-- Table -->
-        <div class="table-responsive">
-            <table id="clientsTable" class="table table-hover mb-0" style="font-size: 14px;">
-                <thead class="table-header">
+    </div>
+
+    <!-- /.card-header -->
+
+    <div class="card-body">
+
+        <table id="example1" class="table table-bordered table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Code)
+
+                    </th>
+
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Name)
+
+                    </th>
+
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Address)
+
+                    </th>
+
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+
+                    </th>
+
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Email)
+
+                    </th>
+
+                    <th>
+
+                        @Html.DisplayNameFor(model => model.Status)
+
+                    </th>
+
+                    <th>Edit</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var item in Model)
+
+                {
+
                     <tr>
-                        <th style="width: 60px;"></th>
-                        <th>Client</th>
-                        <th>Contact Info</th>
-                        <th>Location</th>
-                        <th class="text-center" style="width: 100px;">Status</th>
-                        <th class="text-center" style="width: 140px;">Actions</th>
+
+                        <td>
+
+                            @Html.DisplayFor(model => item.Code)
+
+                        </td>
+
+                        <td>
+
+                            @Html.DisplayFor(model => item.Name)
+
+                        </td>
+
+                        <td>
+
+                            @Html.DisplayFor(model => item.Address)
+
+                        </td>
+
+                        <td>
+
+                            @Html.DisplayFor(model => item.PhoneNumber)
+
+                        </td>
+
+                        <td>
+
+                            @Html.DisplayFor(model => item.Email)
+
+                        </td>
+
+                        <td>
+
+                            <span class="btn btn-outline-success btn-smpx-4 rounded-3 w-100"> @Html.DisplayFor(model => item.Status.Description)</span>
+
+                        </td>
+
+                        <td>
+
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="bx bxs-edit"></i></a>
+
+                        </td>
+
                     </tr>
-                </thead>
-                <tbody>
-                    @if (Model?.Any() != true)
-                    {
-                        <tr>
-                            <td colspan="6">
-                                <div class="empty-state">
-                                    <div class="empty-state-icon">
-                                        <i class="bx bx-user-x" style="font-size: 36px; color: #9ca3af;"></i>
-                                    </div>
-                                    <h5 class="text-muted mb-2">No Clients Found</h5>
-                                    <p class="text-muted mb-3">Get started by adding your first client</p>
-                                    <a asp-action="Create" class="btn btn-primary" style="border-radius: 8px;">
-                                        <i class="bi bi-plus-lg mr-2"></i>Add Client
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        @foreach (var item in Model)
-                        {
-                            var initials = string.Concat(item.Name?.Split(' ').Select(n => n[0]).Take(2))?.ToUpper() ?? "CL";
-                            var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c" };
-                            var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
-                            
-                            var statusClass = item.Status?.Description?.ToLower() switch
-                            {
-                                "active" => "badge-success",
-                                "inactive" => "badge-secondary",
-                                "suspended" => "badge-warning",
-                                _ => "badge-light"
-                            };
-                            
-                            <tr class="client-row" data-status="@item.Status?.Description?.ToLower()">
-                                <td class="text-center">
-                                    <div class="client-avatar" style="background: @bgColor;">
-                                        @initials
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span style="font-weight: 600; color: #2d3748; font-size: 15px;">@item.Name</span>
-                                        <small class="text-muted">
-                                            <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 11px;">@item.Code</span>
-                                        </small>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <span><i class="bx bx-envelope mr-1 text-muted"></i>@item.Email</span>
-                                        <small class="text-muted"><i class="bx bx-phone mr-1"></i>@item.PhoneNumber</small>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="text-muted"><i class="bx bx-map-pin mr-1"></i>@item.Address</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge status-badge @statusClass">@item.Status?.Description</span>
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <a asp-action="Details" asp-route-id="@item.Id" 
-                                           class="btn btn-outline-info action-btn" 
-                                           data-toggle="tooltip" title="View Details">
-                                            <i class="bx bx-show"></i>
-                                        </a>
-                                        <a asp-action="Edit" asp-route-id="@item.Id" 
-                                           class="btn btn-outline-primary action-btn" 
-                                           data-toggle="tooltip" title="Edit Client">
-                                            <i class="bx bx-edit"></i>
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id" 
-                                           class="btn btn-outline-danger action-btn" 
-                                           data-toggle="tooltip" title="Delete Client">
-                                            <i class="bx bx-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-        
-        @if (totalClients > 0)
-        {
-            <div class="p-3 border-top" style="background: #fafbfc;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <small class="text-muted">
-                        Showing <strong>@totalClients</strong> client@(totalClients != 1 ? "s" : "")
-                    </small>
-                    <small class="text-muted" id="filteredCount"></small>
-                </div>
-            </div>
-        }
+
+                }
+
+            </tbody>
+
+        </table>
+
     </div>
+
 </div>
 
-@section Scripts {
-    <script>
-        $(function () {
-            // Initialize tooltips
-            $('[data-toggle="tooltip"]').tooltip();
-            
-            // Search functionality
-            $('#clientSearch').on('keyup', function() {
-                var value = $(this).val().toLowerCase();
-                filterTable(value, $('.badge.status-badge').first().text().toLowerCase() === 'all');
-            });
-            
-            // Filter buttons
-            $('#filterAll').click(function() {
-                filterTable($('#clientSearch').val().toLowerCase(), true);
-                $(this).removeClass('btn-outline-secondary').addClass('btn-secondary');
-                $('#filterActive, #filterInactive').removeClass('btn-success btn-secondary').addClass('btn-outline-success btn-outline-secondary');
-            });
-            
-            $('#filterActive').click(function() {
-                filterTable($('#clientSearch').val().toLowerCase(), false, 'active');
-                $(this).removeClass('btn-outline-success').addClass('btn-success');
-                $('#filterAll, #filterInactive').removeClass('btn-secondary btn-warning').addClass('btn-outline-secondary');
-            });
-            
-            $('#filterInactive').click(function() {
-                filterTable($('#clientSearch').val().toLowerCase(), false, 'inactive');
-                $(this).removeClass('btn-outline-secondary').addClass('btn-warning');
-                $('#filterAll, #filterActive').removeClass('btn-secondary btn-success').addClass('btn-outline-secondary btn-outline-success');
-            });
-            
-            function filterTable(searchText, showAll, statusFilter) {
-                var visibleCount = 0;
-                $('.client-row').each(function() {
-                    var row = $(this);
-                    var text = row.text().toLowerCase();
-                    var status = row.data('status');
-                    
-                    var matchesSearch = text.indexOf(searchText) > -1;
-                    var matchesStatus = showAll || status === statusFilter;
-                    
-                    if (matchesSearch && matchesStatus) {
-                        row.show();
-                        visibleCount++;
-                    } else {
-                        row.hide();
-                    }
-                });
-                
-                $('#filteredCount').text(visibleCount !== @totalClients ? 'Filtered: ' + visibleCount + ' shown' : '');
-            }
-        });
-    </script>
-}
+
 

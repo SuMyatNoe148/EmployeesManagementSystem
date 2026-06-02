@@ -91,6 +91,13 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
                 
                 var user = existingUsers.First();
 
+                // Check if email is confirmed
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    ModelState.AddModelError(string.Empty, "Please confirm your email before logging in. Check your email for the confirmation link.");
+                    return Page();
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
