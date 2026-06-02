@@ -34,6 +34,12 @@
                             @Html.DisplayNameFor(model => model.LeaveType)
                         </th>
                         <th>
+                            @Html.DisplayNameFor(model => model.CreatedById)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreatedOn)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.Status)
                         </th>
                         <th>Action</th>
@@ -63,6 +69,12 @@
                                 @Html.DisplayFor(modelItem => item.LeaveType.Name)
                             </td>
                             <td>
+                                @Html.DisplayFor(modelItem => item.CreatedById)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedOn)
+                            </td>
+                            <td>
                                 @if(item.Status.Code == "Approved")
                                 {
                                 <span class="badge rounded-pill bg-success">
@@ -81,7 +93,7 @@
                                     @Html.DisplayFor(modelItem => item.Status.Description)
                                     </span>
                                 }
-                        </td>
+                            </td>
                             <td>
                                 <div class="ms-auto">
                                     <div class="btn-group">

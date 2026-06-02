@@ -30,10 +30,13 @@ namespace EmployeeManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var leaveApplication = await _context.leaveApplications
+                .AsNoTracking()
                 .Include(l => l.Duration)
                 .Include(l => l.Employee)
                 .Include(l => l.LeaveType)
                 .Include(l => l.Status)
+                .Include(l => l.CreatedById)
+                .OrderByDescending(l => l.CreatedOn)
                 .ToListAsync();
 
             return View(leaveApplication);
