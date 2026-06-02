@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -40,13 +41,16 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null)
+                // Check if email exists (use FirstOrDefault to handle duplicates)
+                var existingUsers = await _userManager.Users.Where(u => u.Email == Input.Email).ToListAsync();
+                if (!existingUsers.Any())
                 {
                     // Show error - email not registered
                     ModelState.AddModelError(string.Empty, "This email address is not registered. Please check your email or register a new account.");
                     return Page();
                 }
+                
+                var user = existingUsers.First();
 
                 // For more information on how to enable account confirmation and password reset please 
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713

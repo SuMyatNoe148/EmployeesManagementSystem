@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -80,13 +81,15 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
         
             if (ModelState.IsValid)
             {
-                // First check if user exists
-                var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null)
+                // First check if user exists (use Where/FirstOrDefault to handle duplicates)
+                var existingUsers = await _userManager.Users.Where(u => u.Email == Input.Email).ToListAsync();
+                if (!existingUsers.Any())
                 {
                     ModelState.AddModelError(string.Empty, "No account found with this email address. Please check your email or register a new account.");
                     return Page();
                 }
+                
+                var user = existingUsers.First();
 
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
