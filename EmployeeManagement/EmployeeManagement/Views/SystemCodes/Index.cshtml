@@ -1,59 +1,131 @@
-﻿@model IEnumerable<EmployeeManagement.Models.SystemCode>
+@model IEnumerable<EmployeeManagement.Models.SystemCode>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "System Code Management";
+    var totalCount = Model?.Count() ?? 0;
 }
-<div class="card">
-    <div class="card-header">
-        <div class="mb-3 float-right">
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-square"></i>  Add New System Code
-            </a>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight: 600; color: #2d3748;">
+            <i class="bx bx-code-alt mr-2" style="color: #667eea;"></i>System Code Management
+        </h2>
+        <p class="text-muted mb-0">Manage system codes and classifications</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary" style="border-radius: 10px; padding: 12px 24px; font-weight: 500;">
+        <i class="bi bi-plus-lg mr-2"></i>Add System Code
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total System Codes</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@totalCount</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-code-alt" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- /.card-header -->
-    <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Code)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Description)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreatedById)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreatedOn)
-                    </th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+</div>
+
+<div class="card main-card">
+    <div class="card-body p-0">
+        <div class="p-4 border-bottom" style="background: #fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0" style="border-radius: 10px 0 0 10px;">
+                                <i class="bx bx-search text-muted"></i>
+                            </span>
+                        </div>
+                        <input type="text" id="searchBox" class="form-control border-left-0 search-box" placeholder="Search by code or description..." style="border-radius: 0 10px 10px 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Code)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedBy.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedOn)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="bx bxs-edit"></i></a>
-                        </td>
+                        <th style="width: 60px;"></th>
+                        <th>System Code</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                        <th class="text-center" style="width: 140px;">Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @if (Model?.Any() != true)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div style="width: 80px; height: 80px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                        <i class="bx bx-code-alt" style="font-size: 36px; color: #9ca3af;"></i>
+                                    </div>
+                                    <h5 class="text-muted mb-2">No System Codes Found</h5>
+                                    <a asp-action="Create" class="btn btn-primary" style="border-radius: 8px;"><i class="bi bi-plus-lg mr-2"></i>Add System Code</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c" };
+                            var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
+                            <tr class="data-row">
+                                <td class="text-center">
+                                    <div class="data-icon" style="background: @bgColor;"><i class="bx bx-code-alt"></i></div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span style="font-weight: 600; color: #2d3748; font-size: 15px;">@item.Description</span>
+                                        <small class="text-muted"><span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 11px;">@item.Code</span></small>
+                                    </div>
+                                </td>
+                                <td><span class="text-muted"><i class="bx bx-user mr-1"></i>@item.CreatedBy?.FullName</span></td>
+                                <td><span class="text-muted"><i class="bx bx-calendar mr-1"></i>@item.CreatedOn.ToString("yyyy-MM-dd")</span></td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary action-btn" data-toggle="tooltip" title="Edit"><i class="bx bx-edit"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger action-btn" data-toggle="tooltip" title="Delete"><i class="bx bx-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (totalCount > 0)
+        {
+            <div class="p-3 border-top" style="background: #fafbfc;">
+                <small class="text-muted">Showing <strong>@totalCount</strong> system code@(totalCount != 1 ? "s" : "")</small>
+            </div>
+        }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#searchBox').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                $('.data-row').filter(function() { $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
+            });
+        });
+    </script>
+}
 

@@ -2,66 +2,197 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
+    Layout = null;
 }
 
-<h1>@ViewData["Title"]</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Management System - Register</title>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="~/css/customstyle.css" />
+
+</head>
+<body class="register-page">
+    <div class="register-box">
+        <div class="card register-card">
+            <div class="register-header">
+                <div class="logo-icon">
+                    <i class='bx bxs-briefcase'></i>
+                </div>
+                <h1>EMS</h1>
+                <p>Employee Management System</p>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
+            <div class="register-body">
+                <div class="register-title">Create Account</div>
+
+                <form asp-route-returnUrl="@Model.ReturnUrl" method="post" id="registerForm">
+                    <!-- Error Toast -->
+                    <div id="errorToast" class="error-toast" style="display: none;">
+                        <div class="error-toast-content">
+                            <i class='bx bx-error-circle error-icon'></i>
+                            <div class="error-message" id="errorMessage"></div>
+                            <i class='bx bx-x error-close' onclick="hideError()"></i>
+                        </div>
                     </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
+                    
+                    <!-- Validation Summary (hidden, used for server-side errors) -->
+                    <div asp-validation-summary="All" class="text-danger" style="display:none;" data-valmsg-summary="true"></div>
+                    
+                    <div class="input-group-register">
+                        <i class='bx bx-envelope input-icon'></i>
+                        <input asp-for="Input.Email" id="emailInput" class="form-control form-control-register" autocomplete="username" aria-required="true" placeholder="Email Address" />
+                    </div>
+                    
+                    <div class="input-group-register">
+                        <i class='bx bx-lock-alt input-icon'></i>
+                        <input asp-for="Input.Password" id="passwordInput" class="form-control form-control-register" autocomplete="new-password" aria-required="true" placeholder="Password" />
+                        <i class='bx bx-show password-toggle' id="togglePassword" onclick="togglePassword('passwordInput', 'togglePassword')"></i>
+                    </div>
+                    
+                    <div class="input-group-register">
+                        <i class='bx bx-lock input-icon'></i>
+                        <input asp-for="Input.ConfirmPassword" id="confirmPasswordInput" class="form-control form-control-register" autocomplete="new-password" aria-required="true" placeholder="Confirm Password" />
+                        <i class='bx bx-show password-toggle' id="toggleConfirmPassword" onclick="togglePassword('confirmPasswordInput', 'toggleConfirmPassword')"></i>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-register" id="submitBtn" disabled>
+                        <i class='bx bx-user-plus mr-2'></i>Register
+                    </button>
+                </form>
+
+                <div class="external-login">
+                    @{
+                        if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                        {
+                            <div class="external-login-title">Or register with</div>
+                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                                 @foreach (var provider in Model.ExternalLogins)
                                 {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <button type="submit" class="btn btn-external mb-2" name="provider" value="@provider.Name" title="Register using your @provider.DisplayName account">
+                                        <i class='bx bxl-@provider.Name.ToLower() mr-2'></i>@provider.DisplayName
+                                    </button>
                                 }
-                            </p>
-                        </div>
-                    </form>
+                            </form>
+                        }
+                    }
+                </div>
+                
+                <div class="register-links">
+                    <a asp-page="./Login"><i class='bx bx-log-in mr-1'></i>Already have an account? Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        function togglePassword(inputId, toggleId) {
+            var passwordInput = document.getElementById(inputId);
+            var toggleIcon = document.getElementById(toggleId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bx-show');
+                toggleIcon.classList.add('bx-hide');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bx-hide');
+                toggleIcon.classList.add('bx-show');
+            }
+        }
+
+        function showError(message) {
+            var errorToast = document.getElementById('errorToast');
+            var errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorToast.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorToast').style.display = 'none';
+        }
+
+        // Show server-side errors
+        document.addEventListener('DOMContentLoaded', function() {
+            var serverErrors = document.querySelectorAll('[data-valmsg-summary] ul li');
+            if (serverErrors.length > 0) {
+                var errorText = serverErrors[0].textContent;
+                if (errorText) {
+                    showError(errorText);
                 }
             }
-        </section>
-    </div>
-</div>
+        });
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+        function validateForm() {
+            var password = document.getElementById('passwordInput').value;
+            var confirmPassword = document.getElementById('confirmPasswordInput').value;
+            var email = document.getElementById('emailInput').value;
+            var submitBtn = document.getElementById('submitBtn');
+            
+            // Enable button if all fields filled and passwords match
+            var passwordsMatch = password === confirmPassword && password !== '' && confirmPassword !== '';
+            submitBtn.disabled = !(email && password && passwordsMatch);
+        }
+
+        // Add event listeners
+        document.getElementById('passwordInput').addEventListener('input', validateForm);
+        document.getElementById('confirmPasswordInput').addEventListener('input', validateForm);
+        document.getElementById('emailInput').addEventListener('input', validateForm);
+
+        // Form submission validation
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            var email = document.getElementById('emailInput').value;
+            var password = document.getElementById('passwordInput').value;
+            var confirmPassword = document.getElementById('confirmPasswordInput').value;
+            
+            if (!email) {
+                e.preventDefault();
+                showError('Please enter your email address');
+                return;
+            }
+            
+            if (!password) {
+                e.preventDefault();
+                showError('Please enter a password');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                showError('Passwords do not match');
+                return;
+            }
+            
+            var hasLength = password.length >= 6;
+            var hasUpper = /[A-Z]/.test(password);
+            var hasLower = /[a-z]/.test(password);
+            var hasNumber = /[0-9]/.test(password);
+            var hasSpecial = /[^A-Za-z0-9]/.test(password);
+            
+            if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
+                e.preventDefault();
+                showError('Please meet all password requirements');
+                return;
+            }
+        });
+
+    </script>
+</body>
+</html>

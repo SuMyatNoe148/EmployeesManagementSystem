@@ -1,65 +1,127 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 
 @model IEnumerable<IdentityRole>
 
 @{
-    ViewData["Title"] = "System Roles";
+    ViewData["Title"] = "System Role Management";
+    var totalCount = Model?.Count() ?? 0;
 }
-<div class="card">
-    <div class="card-header">
-        <div class="mb-3 float-right">
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-square"></i>  Add New Role
-            </a>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight: 600; color: #2d3748;">
+            <i class="bx bx-shield-alt mr-2" style="color: #667eea;"></i>System Role Management
+        </h2>
+        <p class="text-muted mb-0">Manage system roles and permissions</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary" style="border-radius: 10px; padding: 12px 24px; font-weight: 500;">
+        <i class="bi bi-plus-lg mr-2"></i>Add Role
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Roles</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@totalCount</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-shield-alt" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="card-body">
-            <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>
-                            Role No
-                        </th>
-                        <th>
-                            Role Name
-                        </th>
-                        <th>Action</th>
+</div>
 
+<div class="card main-card">
+    <div class="card-body p-0">
+        <div class="p-4 border-bottom" style="background: #fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0" style="border-radius: 10px 0 0 10px;">
+                                <i class="bx bx-search text-muted"></i>
+                            </span>
+                        </div>
+                        <input type="text" id="searchBox" class="form-control border-left-0 search-box" placeholder="Search by role name..." style="border-radius: 0 10px 10px 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
+                    <tr>
+                        <th style="width: 60px;"></th>
+                        <th>Role</th>
+                        <th>Role ID</th>
+                        <th class="text-center" style="width: 140px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model?.Any() != true)
                     {
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Id)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                <div class="ms-auto">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-primary"> Actions</button>
-                                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
-                                            <span class="visually-hidden"></span>
-                                        </button>
-                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
-                                                <i class="bx bxs-edit"></i> Edit
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a asp-action="UserRights" asp-route-id="@item.Id" class="dropdown-item" asp-controller="Profiles">
-                                                <i class="bi bi-lock"></i> Assign Rights
-                                            </a>
-                                        </div>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <div style="width: 80px; height: 80px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                        <i class="bx bx-shield-alt" style="font-size: 36px; color: #9ca3af;"></i>
                                     </div>
+                                    <h5 class="text-muted mb-2">No Roles Found</h5>
+                                    <a asp-action="Create" class="btn btn-primary" style="border-radius: 8px;"><i class="bi bi-plus-lg mr-2"></i>Add Role</a>
                                 </div>
                             </td>
                         </tr>
                     }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c" };
+                            var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
+                            <tr class="data-row">
+                                <td class="text-center">
+                                    <div class="role-icon" style="background: @bgColor;"><i class="bx bx-shield-alt"></i></div>
+                                </td>
+                                <td>
+                                    <span class="role-badge"><i class="bx bx-shield mr-1"></i>@item.Name</span>
+                                </td>
+                                <td><span class="text-muted" style="font-size: 12px;">@item.Id</span></td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary action-btn" data-toggle="tooltip" title="Edit"><i class="bx bx-edit"></i></a>
+                                        <a asp-action="UserRights" asp-controller="Profiles" asp-route-id="@item.Id" class="btn btn-outline-warning action-btn" data-toggle="tooltip" title="Assign Rights"><i class="bx bx-lock"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
                 </tbody>
             </table>
         </div>
+        @if (totalCount > 0)
+        {
+            <div class="p-3 border-top" style="background: #fafbfc;">
+                <small class="text-muted">Showing <strong>@totalCount</strong> role@(totalCount != 1 ? "s" : "")</small>
+            </div>
+        }
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#searchBox').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                $('.data-row').filter(function() { $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
+            });
+        });
+    </script>
+}

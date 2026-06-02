@@ -1,0 +1,71 @@
+﻿@model EmployeeManagement.ViewModels.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Employees Documents";
+}
+<div class="card">
+    <div class="card-header">
+        <div class="mb-3 float-right">
+            <a asp-action="AddEmployeeDocument" asp-route-id="@Model.Id" class="btn btn-primary"><i class="bi bi-plus-square"></i> Add New Document</a>
+        </div>
+    </div>
+<div class="card-body">
+    <h3>Employee Documents</h3>
+    <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Document.DocumentTypeId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Document.FileType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Document.DocumentName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Document.CreatedOn)
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.EmployeeDocuments)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DocumentType.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DocumentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedOn)
+                    </td>
+                    <td>
+                        <div class="ms-auto">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary"> Actions</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden"></span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
+                                        <i class="bx bxs-edit"></i> Edit
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
+                                        <i class="bx bxs-show"></i> View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

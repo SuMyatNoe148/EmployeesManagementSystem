@@ -20,94 +20,94 @@
                         <div class="col-md-12">
                             <table class="table table-bordered table-striped">
                                 <tr>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.Employee)
                                     </th>
-                                    <td class="col-sm-10">
-                                        @Html.DisplayFor(model => model.Employee.Id)
+                                    <td class="col-sm-4">
+                                        @Html.DisplayFor(model => model.Employee.FullName)
                                     </td>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.NoOfDays)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.NoOfDays)
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.StartDate)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.StartDate)
                                     </td>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.EndDate)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.EndDate)
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.Duration)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.Duration.Id)
                                     </td>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.LeaveType)
                                     </th>
-                                    <td class="col-sm-10">
-                                        @Html.DisplayFor(model => model.LeaveType.Id)
+                                    <td class="col-sm-4">
+                                        @Html.DisplayFor(model => model.LeaveType.Name)
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.Attachment)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.Attachment)
                                     </td>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.Description)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.Description)
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.Status)
                                     </th>
-                                    <td class="col-sm-10">
-                                        @Html.DisplayFor(model => model.Status.Id)
+                                    <td class="col-sm-4">
+                                        @Html.DisplayFor(model => model.Status.Description)
                                     </td>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.CreatedById)
                                     </th>
-                                    <td class="col-sm-10">
-                                        @Html.DisplayFor(model => model.CreatedById)
+                                    <td class="col-sm-4">
+                                        @Html.DisplayFor(model => model.CreatedBy.FullName)
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.CreatedOn)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.CreatedOn)
                                     </td>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.ModifiedById)
                                     </th>
-                                    <td class="col-sm-10">
-                                        @Html.DisplayFor(model => model.ModifiedById)
+                                    <td class="col-sm-4">
+                                        @Html.DisplayFor(model => model.ModifiedBy.FullName)
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th class="col-sm-2">
+                                    <th class="col-sm-4">
                                         @Html.DisplayNameFor(model => model.ModifiedOn)
                                     </th>
-                                    <td class="col-sm-10">
+                                    <td class="col-sm-4">
                                         @Html.DisplayFor(model => model.ModifiedOn)
                                     </td>
                                 </tr>

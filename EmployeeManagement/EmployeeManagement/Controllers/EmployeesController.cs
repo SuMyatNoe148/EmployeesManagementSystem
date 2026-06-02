@@ -21,7 +21,7 @@ namespace EmployeeManagement.Controllers
         private readonly IMapper _mapper;
         public readonly IExtensionService _extension;
 
-        public EmployeesController(IExtensionService extension,IMapper mapper, IConfiguration configuration, ApplicationDbContext context)
+        public EmployeesController(IExtensionService extension, IMapper mapper, IConfiguration configuration, ApplicationDbContext context)
         {
             _context = context;
             _configuration = configuration;
@@ -30,35 +30,35 @@ namespace EmployeeManagement.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index(EmployeeViewModel employees)
+        public async Task<IActionResult> Index(EmployeeViewModel model)
         {
             var rawdata = _context.Employees
                 .Include(x => x.Status).AsQueryable();
 
-            if (!string.IsNullOrEmpty(employees.FullName))
+            if (!string.IsNullOrEmpty(model.FullName))
             {
                 rawdata = rawdata
                     .Where(x =>
                     (x.FirstName + " " + x.LastName)
-                    .Contains(employees.FullName.Trim()));
+                    .Contains(model.FullName.Trim()));
             }
-            if (employees.PhoneNumber > 0)
+            if (model.PhoneNumber > 0)
             {
                 rawdata = rawdata
-                    .Where(x => x.PhoneNumber == employees.PhoneNumber);
+                    .Where(x => x.PhoneNumber == model.PhoneNumber);
             }
-            if (!string.IsNullOrEmpty(employees.EmailAddress))
+            if (!string.IsNullOrEmpty(model.EmailAddress))
             {
                 rawdata = rawdata
-                    .Where(x => x.EmailAddress == employees.EmailAddress);
+                    .Where(x => x.EmailAddress == model.EmailAddress);
             }
-            if (!string.IsNullOrEmpty(employees.EmpNo))
+            if (!string.IsNullOrEmpty(model.EmpNo))
             {
                 rawdata = rawdata
-                    .Where(x => x.EmpNo == employees.EmpNo);
+                    .Where(x => x.EmpNo == model.EmpNo);
             }
-            employees.Employees = await rawdata.OrderBy(x => x.Id).ToListAsync();
-            return View(employees);
+            model.Employees = await rawdata.OrderBy(x => x.Id).ToListAsync();
+            return View(model);
         }
 
         // GET: Employees/Details/5
@@ -105,7 +105,7 @@ namespace EmployeeManagement.Controllers
                 var employee = new Employee();
                 _mapper.Map(newemployee, employee);
 
-                employee.EmpNo =await _extension.GenerateEmployeeNumber();
+                employee.EmpNo = await _extension.GenerateEmployeeNumber();
 
                 if (employeephoto != null && employeephoto.Length > 0)
                 {
@@ -182,7 +182,7 @@ namespace EmployeeManagement.Controllers
             }
 
             var newemployee = new EmployeeViewModel();
-            _mapper.Map(employee,newemployee);
+            _mapper.Map(employee, newemployee);
 
             ViewData["DisabilityId"] = new SelectList(_context.systemCodeDetails.Include(x => x.SystemCode).Where(x => x.SystemCode.Code == "DisabilityTypes"), "Id", "Description", employee.DisabilityId);
             ViewData["EmploymentTermsId"] = new SelectList(_context.systemCodeDetails.Include(x => x.SystemCode).Where(x => x.SystemCode.Code == "EmploymentTerms"), "Id", "Description", employee.EmploymentTermsId);
@@ -208,7 +208,7 @@ namespace EmployeeManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,EmployeeViewModel newemployee)
+        public async Task<IActionResult> Edit(int id, EmployeeViewModel newemployee)
         {
             if (id != newemployee.Id)
             {
@@ -296,6 +296,100 @@ namespace EmployeeManagement.Controllers
         private bool EmployeeExists(int id)
         {
             return _context.Employees.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EmployeeDocuments(EmployeeViewModel vm, int? id)
+        {
+            if (vm.Id == null)
+            {
+                return NotFound();
+            }
+            vm.EmployeeDocuments = new();
+            vm.EmployeeDocuments = await _context.EmployeeDocuments
+                .Include(x => x.DocumentType)
+                .Include(x => x.CreatedBy)
+                .Include(x => x.Employee)
+                .Where(m => m.EmployeeId == vm.Id)
+                .ToListAsync();
+
+
+            return View(vm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddEmployeeDocument(int id)
+        {
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            EmployeeViewModel vm = new()
+            {
+                Id = employee.Id,
+                EmpNo = employee.EmpNo
+            };
+
+            ViewData["DocumentTypeId"] = new SelectList(_context.systemCodeDetails
+                    .Include(x => x.SystemCode)
+                    .Where(x => x.SystemCode.Code == "EmployeeDocumentTypes"),"Id","Description");
+
+            return View(vm);
+        }
+
+
+        public async Task<IActionResult> SubmitEmployeeDocument(EmployeeViewModel vm, IFormFile employeeattachment)
+        {
+            try
+            {
+                string filePath = "";
+                if (employeeattachment != null && employeeattachment.Length > 0)
+                {
+                    var fileName = "EmployeeAttachmentPhoto_" + DateTime.Now.ToString("yyyymmddHHmmss") + "_" + vm.DocumentName + "_" + employeeattachment.FileName;
+                    var path = _configuration["FileSettings:UploadFolder"]!;
+                     filePath = Path.Combine(path, fileName);
+                    var stream = new FileStream(filePath, FileMode.Create);
+                    await employeeattachment.CopyToAsync(stream);
+                    vm.Photo = fileName;
+                }
+
+                var empdocument = new EmployeeDocument
+                {
+                    DocumentName = vm.DocumentName,
+                    DocumentTypeId = vm.DocumentTypeId,
+                    EmployeeId = vm.Id,
+                    FileExtension = Path.GetExtension(employeeattachment.FileName),
+                    FileSize = employeeattachment.Length,
+                    FileType = employeeattachment.ContentType,
+                    FilePath = filePath,
+                    UploadDate = DateTime.UtcNow,
+                    ExpiryDate = vm.ExpiryDate,
+                    CreatedById = User.GetUserId(),
+                    CreatedOn = DateTime.UtcNow
+                };
+
+
+                var Userid = User.GetUserId();
+
+                _context.Add(empdocument);
+                await _context.SaveChangesAsync(Userid);
+
+                TempData["Message"] = "Employees Document Attached Successfully!";
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] =
+                    ex.InnerException?.Message ?? ex.Message;
+
+                return View("AddEmployeeDocument", vm);
+            }
         }
     }
 }

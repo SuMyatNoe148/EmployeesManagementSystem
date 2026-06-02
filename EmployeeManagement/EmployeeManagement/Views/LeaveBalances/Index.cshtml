@@ -1,71 +1,149 @@
-﻿@model IEnumerable<EmployeeManagement.Models.Employee>
+@model IEnumerable<EmployeeManagement.Models.Employee>
 
 @{
     ViewData["Title"] = "Leave Balances";
+    var totalCount = Model?.Count() ?? 0;
+    var totalAllocated = Model?.Sum(x => x.AllocatedLeaveDays ?? 0) ?? 0;
+    var totalBalance = Model?.Sum(x => x.LeaveOutstandingBalance ?? 0) ?? 0;
 }
-<div class="card">
-        <div class="card-header">
-            </div>
-        </div>
-    <!-- /.card-header -->
-    <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.EmpNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FullName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.AllocatedLeaveDays)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.LeaveOutstandingBalance)
-                    </th>
-                    <th>Action</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EmpNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AllocatedLeaveDays)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LeaveOutstandingBalance)
-                        </td>
-                        <td>
-                            <div class="ms-auto">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-primary"> Actions</button>
-                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="visually-hidden"></span>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
-                                            <i class="bx bxs-show"></i> View
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a asp-action="AdjustLeaveBalance" asp-route-id="@item.Id" class="dropdown-item">
-                                            <i class="bx bxs-lock-alt"></i> Adjust
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight: 600; color: #2d3748;">
+            <i class="bx bx-calendar mr-2" style="color: #667eea;"></i>Leave Balances
+        </h2>
+        <p class="text-muted mb-0">Monitor employee leave allocations and balances</p>
     </div>
 </div>
+
+<div class="row mb-4">
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Employees</p>
+                        <h3 class="mb-0" style="font-size: 28px; font-weight: 700;">@totalCount</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-user" style="font-size: 24px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Allocated</p>
+                        <h3 class="mb-0" style="font-size: 28px; font-weight: 700;">@totalAllocated</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-calendar-plus" style="font-size: 24px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Balance</p>
+                        <h3 class="mb-0" style="font-size: 28px; font-weight: 700;">@totalBalance</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-calendar-check" style="font-size: 24px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card main-card">
+    <div class="card-body p-0">
+        <div class="p-4 border-bottom" style="background: #fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text bg-white border-right-0" style="border-radius: 10px 0 0 10px;"><i class="bx bx-search text-muted"></i></span></div>
+                        <input type="text" id="searchBox" class="form-control border-left-0 search-box" placeholder="Search by employee number or name..." style="border-radius: 0 10px 10px 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
+                    <tr>
+                        <th style="width: 60px;"></th>
+                        <th>Employee</th>
+                        <th class="text-center">Allocated</th>
+                        <th class="text-center">Balance</th>
+                        <th class="text-center" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model?.Any() != true)
+                    {
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <div style="width: 80px; height: 80px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;"><i class="bx bx-calendar" style="font-size: 36px; color: #9ca3af;"></i></div>
+                                    <h5 class="text-muted mb-2">No Employees Found</h5>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var initials = string.Concat(item.FullName?.Split(' ').Select(n => n[0]).Take(2))?.ToUpper() ?? "EM";
+                            var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c" };
+                            var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
+                            <tr class="data-row">
+                                <td class="text-center"><div class="emp-avatar" style="background: @bgColor;">@initials</div></td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span style="font-weight: 600; color: #2d3748; font-size: 15px;">@item.FullName</span>
+                                        <small class="text-muted"><span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 11px;">@item.EmpNo</span></small>
+                                    </div>
+                                </td>
+                                <td class="text-center"><span class="days-badge">@item.AllocatedLeaveDays days</span></td>
+                                <td class="text-center"><span class="balance-badge">@item.LeaveOutstandingBalance days</span></td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info action-btn" data-toggle="tooltip" title="View"><i class="bx bx-show"></i></a>
+                                        <a asp-action="AdjustLeaveBalance" asp-route-id="@item.Id" class="btn btn-outline-warning action-btn" data-toggle="tooltip" title="Adjust"><i class="bx bx-slider"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (totalCount > 0)
+        {
+            <div class="p-3 border-top" style="background: #fafbfc;"><small class="text-muted">Showing <strong>@totalCount</strong> employee@(totalCount != 1 ? "s" : "")</small></div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#searchBox').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                $('.data-row').filter(function() { $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
+            });
+        });
+    </script>
+}

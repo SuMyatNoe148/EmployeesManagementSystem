@@ -80,6 +80,14 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
         
             if (ModelState.IsValid)
             {
+                // First check if user exists
+                var user = await _userManager.FindByEmailAsync(Input.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "No account found with this email address. Please check your email or register a new account.");
+                    return Page();
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
@@ -99,7 +107,7 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Incorrect password. Please try again or reset your password.");
                     return Page();
                 }
             }

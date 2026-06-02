@@ -1,112 +1,146 @@
-﻿@model EmployeeManagement.ViewModels.SystemCodeDetailsViewModel
+@model EmployeeManagement.ViewModels.SystemCodeDetailsViewModel
 
 @{
-    ViewData["Title"] = "System Code Details";
+    ViewData["Title"] = "System Code Details Management";
+    var totalCount = Model.SystemCodeDetails?.Count() ?? 0;
 }
-<div class="card mb-3">
-    <div class="card-body">
-        <div class="col-md-12">
-            <form asp-action="Index" enctype="multipart/form-data" class="form-vertical">
-                <div class="row">
-                    <div class="form-group col-md-6 mb-3">
-                        <label asp-for="Code" class="form-label">System Code</label>
-                        <input asp-for="Code" class="form-control" />
-                    </div>
-                    <div class="form-group col-md-6 mb-3">
-                        <label asp-for="Description" class="form-label">Description</label>
-                        <input asp-for="Description" class="form-control" />
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-success btn-block m-tb-10">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button"
-                                class="btn btn-secondary w-100"
-                                onclick="window.location.href='@Url.Action("Index", "Employees")'">
 
-                            <i class="bi bi-eraser"></i> Clear
-                        </button>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight: 600; color: #2d3748;">
+            <i class="bx bx-code-curly mr-2" style="color: #667eea;"></i>System Code Details
+        </h2>
+        <p class="text-muted mb-0">Manage system code details and classifications</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary" style="border-radius: 10px; padding: 12px 24px; font-weight: 500;">
+        <i class="bi bi-plus-lg mr-2"></i>Add Details
+    </a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Details</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@totalCount</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-code-curly" style="font-size: 28px;"></i>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
-
-<div class="card">
-    <div class="card-header">
-        <div class="mb-3 float-right">
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-square"></i>  Add New System Code Details
-            </a>
-        </div>
-    </div>
-    <!-- /.card-header -->
+<div class="card search-card mb-4">
     <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.SystemCode)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Code)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Description)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreatedById)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreatedOn)
-                    </th>
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.SystemCodeDetails)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.SystemCode.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Code)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OrderNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedBy.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedOn)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm"><i class="bx bxs-edit"></i></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <form asp-action="Index" enctype="multipart/form-data">
+            <div class="row align-items-end">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label asp-for="Code" class="form-label text-muted small">Code</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text bg-white border-right-0"><i class="bx bx-code text-muted"></i></span></div>
+                        <input asp-for="Code" class="form-control border-left-0 search-box" placeholder="Search by code..." />
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label asp-for="Description" class="form-label text-muted small">Description</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text bg-white border-right-0"><i class="bx bx-text text-muted"></i></span></div>
+                        <input asp-for="Description" class="form-control border-left-0 search-box" placeholder="Search by description..." />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success w-50" style="border-radius: 8px;"><i class="bx bx-search"></i></button>
+                        <a href="@Url.Action("Index", "SystemCodeDetails")" class="btn btn-outline-secondary w-50" style="border-radius: 8px;"><i class="bx bx-refresh"></i></a>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
+<div class="card main-card">
+    <div class="card-body p-0">
+        <div class="p-4 border-bottom" style="background: #fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text bg-white border-right-0" style="border-radius: 10px 0 0 10px;"><i class="bx bx-search text-muted"></i></span></div>
+                        <input type="text" id="searchBox" class="form-control border-left-0 search-box" placeholder="Quick search..." style="border-radius: 0 10px 10px 0;">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<script>
-    $('button.btn-secondary').click(function () {
+        <div class="table-responsive">
+            <table id="dataTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
+                    <tr>
+                        <th style="width: 60px;"></th>
+                        <th>System Code</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th class="text-center">Order</th>
+                        <th class="text-center" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.SystemCodeDetails?.Any() != true)
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <div style="width: 80px; height: 80px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;"><i class="bx bx-code-curly" style="font-size: 36px; color: #9ca3af;"></i></div>
+                                    <h5 class="text-muted mb-2">No Details Found</h5>
+                                    <a asp-action="Create" class="btn btn-primary" style="border-radius: 8px;"><i class="bi bi-plus-lg mr-2"></i>Add Details</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.SystemCodeDetails)
+                        {
+                            var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c" };
+                            var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
+                            <tr class="data-row">
+                                <td class="text-center"><div class="detail-icon" style="background: @bgColor;"><i class="bx bx-code-curly"></i></div></td>
+                                <td><span class="text-muted">@item.SystemCode?.Description</span></td>
+                                <td><span style="font-weight: 600; color: #2d3748;">@item.Code</span></td>
+                                <td><span class="text-muted">@item.Description</span></td>
+                                <td class="text-center"><span class="order-badge">#@item.OrderNo</span></td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary action-btn" data-toggle="tooltip" title="Edit"><i class="bx bx-edit"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger action-btn" data-toggle="tooltip" title="Delete"><i class="bx bx-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (totalCount > 0)
+        {
+            <div class="p-3 border-top" style="background: #fafbfc;"><small class="text-muted">Showing <strong>@totalCount</strong> detail@(totalCount != 1 ? "s" : "")</small></div>
+        }
+    </div>
+</div>
 
-        $('#example1').DataTable().search('').draw();
-
-    });
-</script>
+@section Scripts {
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#searchBox').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                $('.data-row').filter(function() { $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1) });
+            });
+        });
+    </script>
+}

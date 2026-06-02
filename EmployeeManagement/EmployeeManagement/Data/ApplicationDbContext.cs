@@ -36,6 +36,12 @@ namespace EmployeeManagement.Data
         public DbSet<WorkFlowUserGroup> WorkFlowUserGroups { get; set; }
         public DbSet<WorkFlowUserGroupMember> WorkFlowUserGroupMembers { get; set; }
         public DbSet<ApprovalsUserMatrix> ApprovalsUserMatrixs { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<FixedAsset> FixedAssets { get; set; }
+        public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
+        public DbSet<EmployeeNextOfKin> EmployeeNextOfKins { get; set; }
+        public DbSet<EmployeeContract> EmployeeContracts { get; set; }
+        public DbSet<EmployeeHistory> EmployeeHistories { get; set; }
         public virtual async Task<int> SaveChangesAsync(string userId = null)
         {
             OnBeforeSavingChanges(userId);
@@ -172,6 +178,70 @@ namespace EmployeeManagement.Data
                 .WithMany()
                 .HasForeignKey(w => w.WorkFlowUserGroupId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<FixedAsset>()
+                .HasOne(x => x.Status)
+                .WithMany()
+                .HasForeignKey(x => x.StatusId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FixedAsset>()
+                .HasOne(x => x.Category)
+                .WithMany()
+                .HasForeignKey(x => x.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<LeaveType>()
+                .Property(x => x.Days)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<EmployeeContract>()
+                .HasOne(e => e.ContractType)
+                .WithMany()
+                .HasForeignKey(e => e.ContractTypeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<EmployeeContract>()
+                .HasOne(e => e.CurrencyType)
+                .WithMany()
+                .HasForeignKey(e => e.CurrencyTypeId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<EmployeeContract>()
+                .Property(e => e.Salary)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .HasOne(e => e.OldDepartment)
+                .WithMany()
+                .HasForeignKey(e => e.OldDepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .HasOne(e => e.NewDepartment)
+                .WithMany()
+                .HasForeignKey(e => e.NewDepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .HasOne(e => e.OldDesignation)
+                .WithMany()
+                .HasForeignKey(e => e.OldDesignationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .HasOne(e => e.NewDesignation)
+                .WithMany()
+                .HasForeignKey(e => e.NewDesignationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .Property(e => e.OldSalary)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<EmployeeHistory>()
+                .Property(e => e.NewSalary)
+                .HasPrecision(18, 2);
         }
     }
 }

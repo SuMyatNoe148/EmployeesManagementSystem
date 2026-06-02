@@ -102,11 +102,11 @@
                         </td>
 
                         <th class="col-sm-3">
-                            @Html.DisplayNameFor(model => model.ModifiedById)
+                            @Html.DisplayNameFor(model => model.CreatedById)
                         </th>
 
                         <td class="col-sm-3">
-                            @Html.DisplayFor(model => model.ModifiedById)
+                            @Html.DisplayFor(model => model.CreatedBy.FullName)
                         </td>
                     </tr>
                     <tr>
@@ -123,7 +123,7 @@
                         </th>
 
                         <td class="col-sm-3">
-                            @Html.DisplayFor(model => model.ModifiedById)
+                            @Html.DisplayFor(model => model.ModifiedBy.FullName)
                         </td>
                     </tr>
                     <tr>

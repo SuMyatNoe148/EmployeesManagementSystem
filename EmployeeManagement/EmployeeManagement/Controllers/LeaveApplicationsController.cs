@@ -35,7 +35,7 @@ namespace EmployeeManagement.Controllers
                 .Include(l => l.Employee)
                 .Include(l => l.LeaveType)
                 .Include(l => l.Status)
-                .Include(l => l.CreatedById)
+                .Include(l => l.CreatedBy)
                 .OrderByDescending(l => l.CreatedOn)
                 .ToListAsync();
 
@@ -77,10 +77,13 @@ namespace EmployeeManagement.Controllers
             }
 
             var leaveApplication = await _context.leaveApplications
+                .AsNoTracking()
                 .Include(l => l.Duration)
                 .Include(l => l.Employee)
                 .Include(l => l.LeaveType)
                 .Include(l => l.Status)
+                .Include(l => l.CreatedBy)
+                .Include(l => l.ModifiedBy)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (leaveApplication == null)
             {
@@ -132,7 +135,7 @@ namespace EmployeeManagement.Controllers
                 }
 
                 var Userid = User.GetUserId();
-                leaveApplication.CreatedOn = DateTime.Now;
+                leaveApplication.CreatedOn = DateTime.UtcNow;
                 leaveApplication.CreatedById = Userid;
                 leaveApplication.StatusId = pendingStatus.Id;
 
@@ -270,6 +273,8 @@ namespace EmployeeManagement.Controllers
                 .Include(l => l.Employee)
                 .Include(l => l.LeaveType)
                 .Include(l => l.Status)
+                .Include(l => l.CreatedBy)
+                .Include(l => l.ModifiedBy)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (leaveApplication == null)
             {

@@ -10,89 +10,140 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Employees Management System</title>
+    <title>Employee Management System - Login</title>
 
-    <!-- Google Font: Source Sans Pro -->
+    <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
-    <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="~/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="~/css/customstyle.css" />
+    
 </head>
-<body class="hold-transition login-page">
+<body class="login-page">
     <div class="login-box">
-        <!-- /.login-logo -->
-        <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                <a href="~/AdminLTE/index2.html" class="h1">HRMIS</a>
+        <div class="card login-card">
+            <div class="login-header">
+                <div class="logo-icon">
+                    <i class='bx bxs-briefcase'></i>
+                </div>
+                <h1>EMS</h1>
+                <p>Employee Management System</p>
             </div>
-            <div class="card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+            <div class="login-body">
+                <div class="login-title">Welcome Back!</div>
 
                 <form id="account" method="post">
-                    <div class="input-group mb-3">
-                        <input type="email" asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Email Address" />
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
+                    <!-- Error Toast -->
+                    <div id="errorToast" class="error-toast" style="display: none;">
+                        <div class="error-toast-content">
+                            <i class='bx bx-error-circle error-icon'></i>
+                            <div class="error-message" id="errorMessage"></div>
+                            <i class='bx bx-x error-close' onclick="hideError()"></i>
                         </div>
                     </div>
-                    <div class="input-group mb-3">
-                        <input type="password" asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password"/>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
+                    
+                    <!-- Validation Summary (hidden, used for server-side errors) -->
+                    <div asp-validation-summary="All" class="text-danger" style="display:none;" data-valmsg-summary="true"></div>
+                    
+                    <div class="input-group-login">
+                        <i class='bx bx-envelope input-icon'></i>
+                        <input type="email" asp-for="Input.Email" id="emailInput" class="form-control form-control-login" autocomplete="username" aria-required="true" placeholder="Email Address" />
                     </div>
-                    <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type ="checkbox" asp-for="Input.RememberMe" />
-                                <label for="remember">
-                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
-                                </label>
-                            </div>
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary">Log in</button>
-                        </div>
-                        <!-- /.col -->
+                    
+                    <div class="input-group-login">
+                        <i class='bx bx-lock-alt input-icon'></i>
+                        <input type="password" asp-for="Input.Password" id="passwordInput" class="form-control form-control-login" autocomplete="current-password" aria-required="true" placeholder="Password"/>
+                        <i class='bx bx-show password-toggle' id="togglePassword" onclick="togglePassword('passwordInput', 'togglePassword')"></i>
                     </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <label class="remember-me">
+                            <input type="checkbox" asp-for="Input.RememberMe" />
+                            <span>@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
+                        </label>
+                    </div>
+                    <br />
+                    <button type="submit" class="btn btn-login">
+                        <i class='bx bx-log-in mr-2'></i>Sign In
+                    </button>
                 </form>
-                <!-- /.social-auth-links -->
-                <div class="form-group">
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
+                
+                <div class="login-links">
+                    <a id="forgot-password" asp-page="./ForgotPassword"><i class='bx bx-key mr-1'></i>Forgot password?</a>
+                    <span class="divider">|</span>
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl"><i class='bx bx-user-plus mr-1'></i>Register</a>
                 </div>
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
     </div>
-    @section Scripts {
-        <!-- /.login-box -->
-        <!-- jQuery -->
-        <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
-        <!-- Bootstrap 4 -->
-        <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- AdminLTE App -->
-        <script src="~/AdminLTE/dist/js/adminlte.min.js"></script>
-        <partial name="_ValidationScriptsPartial" />
-    }
+
+    <!-- jQuery -->
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        function togglePassword(inputId, toggleId) {
+            var passwordInput = document.getElementById(inputId);
+            var toggleIcon = document.getElementById(toggleId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bx-show');
+                toggleIcon.classList.add('bx-hide');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bx-hide');
+                toggleIcon.classList.add('bx-show');
+            }
+        }
+
+        function showError(message) {
+            var errorToast = document.getElementById('errorToast');
+            var errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorToast.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorToast').style.display = 'none';
+        }
+
+        // Form submission validation
+        document.getElementById('account').addEventListener('submit', function(e) {
+            var email = document.getElementById('emailInput').value;
+            var password = document.getElementById('passwordInput').value;
+            
+            if (!email) {
+                e.preventDefault();
+                showError('Please enter your email address');
+                return;
+            }
+            
+            if (!password) {
+                e.preventDefault();
+                showError('Please enter your password');
+                return;
+            }
+        });
+
+        // Show server-side errors
+        document.addEventListener('DOMContentLoaded', function() {
+            var serverErrors = document.querySelectorAll('[data-valmsg-summary] ul li');
+            if (serverErrors.length > 0) {
+                var errorText = serverErrors[0].textContent;
+                if (errorText) {
+                    showError(errorText);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
 

@@ -1,0 +1,79 @@
+﻿@model EmployeeManagement.ViewModels.EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Add New Document";
+}
+<div class="row">
+    <div class="col-xl-12 mx-auto">
+        <div class="card border-top border-0 border-4 border-info">
+            <div class="card-body">
+                <div class="border p-4 rounded">
+                    <div class="card-title d-flex align-items-center">
+                        <div>
+                            <i class="bx bxs-user me-1 font-22 text-info"></i>
+                        </div>
+                        <h5 class="mb-0 text-info">Add New Employee Document</h5>
+                    </div>
+                    <hr />
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <form asp-action="SubmitEmployeeDocument" method="post" enctype="multipart/form-data">
+                                <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="CreatedById" />
+                                <input type="hidden" asp-for="CreatedOn" />
+                                <input type="hidden" asp-for="EmpNo" />
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="DocumentTypeId" class="control-label"></label>
+                                            <select asp-for="DocumentTypeId" class="form-control" asp-items="ViewBag.DocumentTypeId">
+                                                <option value="">Select Document Type</option>
+                                            </select>
+                                            <span asp-validation-for="DocumentTypeId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="DocumentName" class="control-label"></label>
+                                            <input asp-for="DocumentName" type="text" class="form-control" />
+                                            <span asp-validation-for="DocumentName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label asp-for="ExpiryDate" class="control-label"></label>
+                                            <input asp-for="ExpiryDate" class="form-control" />
+                                            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <label asp-for="Attachment" class="control-label"></label>
+                                            <input class="form-control" type="file" accept=".pdf,.png,.jpg,.jpeg" id="attachment" name="employeeattachment" />
+                                            <span asp-validation-for="Attachment" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group p-lg-5">
+                                    <div class="col-md-12">
+                                        <a asp-action="Index" class="btn btn-warning float-start"><i class="bi bi-skip-backward-fill"></i> Back To List</a>
+                                        <button type="submit" class="btn btn-primary float-end"><i class="bi bi-save"></i> Upload Attachment</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

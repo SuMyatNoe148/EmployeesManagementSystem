@@ -41,10 +41,11 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user == null)
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return RedirectToPage("./ForgotPasswordConfirmation");
+                    // Show error - email not registered
+                    ModelState.AddModelError(string.Empty, "This email address is not registered. Please check your email or register a new account.");
+                    return Page();
                 }
 
                 // For more information on how to enable account confirmation and password reset please 

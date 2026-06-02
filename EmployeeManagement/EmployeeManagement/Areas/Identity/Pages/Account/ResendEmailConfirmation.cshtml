@@ -2,25 +2,66 @@
 @model ResendEmailConfirmationModel
 @{
     ViewData["Title"] = "Resend email confirmation";
+    Layout = null;
 }
 
-<h1>@ViewData["Title"]</h1>
-<h2>Enter your email.</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Management System - Resend Email</title>
+
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap/css/bootstrap.min.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="~/css/customstyle.css" />
+</head>
+<body class="login-page">
+    <div class="login-box">
+        <div class="card login-card">
+            <div class="login-header">
+                <div class="logo-icon">
+                    <i class='bx bxs-briefcase'></i>
+                </div>
+                <h1>EMS</h1>
+                <p>Employee Management System</p>
             </div>
-            <button type="submit" class="btn btn-primary">Resend</button>
-        </form>
-    </div>
-</div>
+            <div class="login-body">
+                <div class="login-title">Resend Email</div>
+                <p class="text-center text-muted mb-4">Enter your email to resend confirmation.</p>
 
-@section Scripts {
+                <form method="post">
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    
+                    <div class="input-group-login">
+                        <i class='bx bx-envelope input-icon'></i>
+                        <input asp-for="Input.Email" class="form-control form-control-login" autocomplete="email" aria-required="true" placeholder="Email Address" />
+                    </div>
+                    <span asp-validation-for="Input.Email" class="text-danger d-block mb-3"></span>
+                    
+                    <button type="submit" class="btn btn-login">
+                        <i class='bx bx-send mr-2'></i>Resend
+                    </button>
+                </form>
+                
+                <div class="login-links">
+                    <a asp-page="./Login"><i class='bx bx-arrow-back mr-1'></i>Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
-}
+</body>
+</html>

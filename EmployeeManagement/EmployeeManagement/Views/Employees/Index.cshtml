@@ -1,134 +1,335 @@
-﻿@model EmployeeManagement.ViewModels.EmployeeViewModel
+@model EmployeeManagement.ViewModels.EmployeeViewModel
 
 @{
-    ViewData["Title"] = "Employees List";
+    ViewData["Title"] = "Employee Management";
+    var totalEmployees = Model.Employees?.Count() ?? 0;
+    var activeEmployees = Model.Employees?.Count(e => e.Status?.Description?.ToLower() == "active") ?? 0;
+    var onLeave = Model.Employees?.Count(e => e.LeaveOutstandingBalance > 0) ?? 0;
 }
 
-<div class="card mb-3">
-    <div class="card-body">
-        <div class="col-md-12">
-            <form asp-action="Index" enctype="multipart/form-data" class="form-vertical">
-                <div class="row">
-                    <div class="form-group col-md-3 mb-3">
-                        <label asp-for="EmpNo" class="form-label">Employee No</label>
-                        <input asp-for="EmpNo" class="form-control" />
-                    </div>
-                    <div class="form-group col-md-3 mb-3">
-                        <label asp-for="FullName" class="form-label">Full Name</label>
-                        <input asp-for="FullName" class="form-control" />
-                    </div>
-                    <div class="form-group col-md-3 mb-3">
-                        <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
-                        <input asp-for="PhoneNumber" class="form-control" />
-                    </div>
-                    <div class="form-group col-md-3 mb-3">
-                        <label asp-for="EmailAddress" class="form-label">Email Address</label>
-                        <input asp-for="EmailAddress" class="form-control" />
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-success w-100">
-                            <i class="bi bi-search"></i> Search
-                        </button>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button"
-                                class="btn btn-secondary w-100"
-                                onclick="window.location.href='@Url.Action("Index", "Employees")'">
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight: 600; color: #2d3748;">
+            <i class="bx bx-user mr-2" style="color: #667eea;"></i>Employee Management
+        </h2>
+        <p class="text-muted mb-0">Manage employee records and information</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary" style="border-radius: 10px; padding: 12px 24px; font-weight: 500;">
+        <i class="bi bi-plus-lg mr-2"></i>Add New Employee
+    </a>
+</div>
 
-                            <i class="bi bi-eraser"></i> Clear
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Employees</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@totalEmployees</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-group" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Active Employees</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@activeEmployees</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-check-circle" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-12 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">On Leave</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@onLeave</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-calendar" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search Card -->
+<div class="card search-card mb-4">
+    <div class="card-body">
+        <form asp-action="Index" enctype="multipart/form-data">
+            <div class="row align-items-end">
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label asp-for="EmpNo" class="form-label text-muted small">Employee No</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"><i class="bx bx-id-card text-muted"></i></span>
+                        </div>
+                        <input asp-for="EmpNo" class="form-control border-left-0 search-box" placeholder="Search by ID..." />
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label asp-for="FullName" class="form-label text-muted small">Full Name</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"><i class="bx bx-user text-muted"></i></span>
+                        </div>
+                        <input asp-for="FullName" class="form-control border-left-0 search-box" placeholder="Search by name..." />
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3 mb-md-0">
+                    <label asp-for="PhoneNumber" class="form-label text-muted small">Phone</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"><i class="bx bx-phone text-muted"></i></span>
+                        </div>
+                        <input asp-for="PhoneNumber" class="form-control border-left-0 search-box" placeholder="Phone..." />
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3 mb-md-0">
+                    <label asp-for="EmailAddress" class="form-label text-muted small">Email</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0"><i class="bx bx-envelope text-muted"></i></span>
+                        </div>
+                        <input asp-for="EmailAddress" class="form-control border-left-0 search-box" placeholder="Email..." />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success w-50" style="border-radius: 8px;">
+                            <i class="bx bx-search"></i>
+                        </button>
+                        <a href="@Url.Action("Index", "Employees")" class="btn btn-outline-secondary w-50" style="border-radius: 8px;">
+                            <i class="bx bx-refresh"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Main Content Card -->
+<div class="card main-card">
+    <div class="card-body p-0">
+        <!-- Toolbar -->
+        <div class="p-4 border-bottom" style="background: #fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0" style="border-radius: 10px 0 0 10px;">
+                                <i class="bx bx-search text-muted"></i>
+                            </span>
+                        </div>
+                        <input type="text" id="employeeSearch" class="form-control border-left-0 search-box" 
+                               placeholder="Quick search by name, ID, email or phone..." style="border-radius: 0 10px 10px 0;">
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary" id="filterAll" style="border-radius: 8px 0 0 8px;">
+                            <i class="bx bx-list-ul mr-1"></i>All
+                        </button>
+                        <button type="button" class="btn btn-outline-success" id="filterActive">
+                            <i class="bx bx-check mr-1"></i>Active
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="filterInactive" style="border-radius: 0 8px 8px 0;">
+                            <i class="bx bx-pause mr-1"></i>Inactive
                         </button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-<div class="card">
-    <div class="card-header">
-        <div class="mb-3 float-right">
-            <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-square"></i> Add New Employee</a>
-        </div>
-    </div>
-    <!-- /.card-header -->
-    <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.EmpNo)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FullName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PhoneNumber)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.EmailAddress)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.LeaveOutstandingBalance)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.StatusId)
-                    </th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Employees)
-                {
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table id="employeesTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EmpNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FullName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PhoneNumber)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EmailAddress)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LeaveOutstandingBalance)
-                        </td>
-                        <td>
-                            <span class="badge rounded-pill bg-success">
-                                @Html.DisplayFor(modelItem => item.Status.Description)
-                            </span>
-                        </td>
-                        <td>
-                            <div class="ms-auto">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-primary"> Actions</button>
-                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="visually-hidden"></span>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
-                                            <i class="bx bxs-edit"></i> Edit
+                        <th style="width: 70px;"></th>
+                        <th>Employee</th>
+                        <th>Contact Info</th>
+                        <th class="text-center">Leave Balance</th>
+                        <th class="text-center" style="width: 100px;">Status</th>
+                        <th class="text-center" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Employees?.Any() != true)
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="bx bx-user-x" style="font-size: 36px; color: #9ca3af;"></i>
+                                    </div>
+                                    <h5 class="text-muted mb-2">No Employees Found</h5>
+                                    <p class="text-muted mb-3">Get started by adding your first employee</p>
+                                    <a asp-action="Create" class="btn btn-primary" style="border-radius: 8px;">
+                                        <i class="bi bi-plus-lg mr-2"></i>Add Employee
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.Employees)
+                        {
+                            var initials = string.Concat(item.FullName?.Split(' ').Select(n => n[0]).Take(2))?.ToUpper() ?? "EM";
+                            var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c" };
+                            var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
+                            
+                            var statusClass = item.Status?.Description?.ToLower() switch
+                            {
+                                "active" => "badge-success",
+                                "inactive" => "badge-secondary",
+                                "terminated" => "badge-danger",
+                                "suspended" => "badge-warning",
+                                _ => "badge-light"
+                            };
+                            
+                            <tr class="employee-row" data-status="@item.Status?.Description?.ToLower()">
+                                <td class="text-center">
+                                    <div class="employee-avatar" style="background: @bgColor;">
+                                        @initials
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span style="font-weight: 600; color: #2d3748; font-size: 15px;">@item.FullName</span>
+                                        <small class="text-muted">
+                                            <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 11px;">@item.EmpNo</span>
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <small><i class="bx bx-envelope mr-1 text-muted"></i>@item.EmailAddress</small>
+                                        <small class="text-muted"><i class="bx bx-phone mr-1"></i>@item.PhoneNumber</small>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    @if (item.LeaveOutstandingBalance > 0)
+                                    {
+                                        <span class="leave-badge">@item.LeaveOutstandingBalance days</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge status-badge @statusClass">@item.Status?.Description</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Details" asp-route-id="@item.Id" 
+                                           class="btn btn-outline-info action-btn" 
+                                           data-toggle="tooltip" title="View Details">
+                                            <i class="bx bx-show"></i>
                                         </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
-                                            <i class="bx bxs-show"></i> View
+                                        <a asp-action="Edit" asp-route-id="@item.Id" 
+                                           class="btn btn-outline-primary action-btn" 
+                                           data-toggle="tooltip" title="Edit Employee">
+                                            <i class="bx bx-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" 
+                                           class="btn btn-outline-danger action-btn" 
+                                           data-toggle="tooltip" title="Delete Employee">
+                                            <i class="bx bx-trash"></i>
                                         </a>
                                     </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        @if (totalEmployees > 0)
+        {
+            <div class="p-3 border-top" style="background: #fafbfc;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        Showing <strong>@totalEmployees</strong> employee@(totalEmployees != 1 ? "s" : "")
+                    </small>
+                    <small class="text-muted" id="filteredCount"></small>
+                </div>
+            </div>
+        }
     </div>
 </div>
 
-<script>
-    $('button.btn-secondary').click(function () {
-
-        $('#example1').DataTable().search('').draw();
-
-    });
-</script>
+@section Scripts {
+    <script>
+        $(function () {
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            // Quick search functionality
+            $('#employeeSearch').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                filterTable(value, true);
+            });
+            
+            // Filter buttons
+            $('#filterAll').click(function() {
+                filterTable($('#employeeSearch').val().toLowerCase(), true);
+                $(this).removeClass('btn-outline-secondary').addClass('btn-secondary');
+                $('#filterActive, #filterInactive').removeClass('btn-success btn-secondary').addClass('btn-outline-success btn-outline-secondary');
+            });
+            
+            $('#filterActive').click(function() {
+                filterTable($('#employeeSearch').val().toLowerCase(), false, 'active');
+                $(this).removeClass('btn-outline-success').addClass('btn-success');
+                $('#filterAll, #filterInactive').removeClass('btn-secondary btn-warning').addClass('btn-outline-secondary');
+            });
+            
+            $('#filterInactive').click(function() {
+                filterTable($('#employeeSearch').val().toLowerCase(), false, 'inactive');
+                $(this).removeClass('btn-outline-secondary').addClass('btn-warning');
+                $('#filterAll, #filterActive').removeClass('btn-secondary btn-success').addClass('btn-outline-secondary btn-outline-success');
+            });
+            
+            function filterTable(searchText, showAll, statusFilter) {
+                var visibleCount = 0;
+                $('.employee-row').each(function() {
+                    var row = $(this);
+                    var text = row.text().toLowerCase();
+                    var status = row.data('status');
+                    
+                    var matchesSearch = text.indexOf(searchText) > -1;
+                    var matchesStatus = showAll || status === statusFilter;
+                    
+                    if (matchesSearch && matchesStatus) {
+                        row.show();
+                        visibleCount++;
+                    } else {
+                        row.hide();
+                    }
+                });
+                
+                $('#filteredCount').text(visibleCount !== @totalEmployees ? 'Filtered: ' + visibleCount + ' shown' : '');
+            }
+        });
+    </script>
+}

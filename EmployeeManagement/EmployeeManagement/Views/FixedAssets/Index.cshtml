@@ -1,0 +1,291 @@
+@model IEnumerable<EmployeeManagement.Models.FixedAsset>
+
+@{
+    ViewData["Title"] = "Fixed Asset Management";
+    var totalAssets = Model?.Count() ?? 0;
+    var activeAssets = Model?.Count(a => a.Status?.Description?.ToLower() == "active") ?? 0;
+    var assignedAssets = Model?.Count(a => a.ResponsibleEmployeeId != 0) ?? 0;
+}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="font-weight: 600; color: #2d3748;">
+            <i class="bx bx-package mr-2" style="color: #667eea;"></i>Fixed Asset Management
+        </h2>
+        <p class="text-muted mb-0">Track and manage company assets and equipment</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary" style="border-radius: 10px; padding: 12px 24px; font-weight: 500;">
+        <i class="bi bi-plus-lg mr-2"></i>Add New Asset
+    </a>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Total Assets</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@totalAssets</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-package" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-6 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Active Assets</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@activeAssets</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-check-circle" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-md-12 mb-3">
+        <div class="card stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-1" style="opacity: 0.9; font-size: 14px;">Assigned Assets</p>
+                        <h3 class="mb-0" style="font-size: 32px; font-weight: 700;">@assignedAssets</h3>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bx bx-user-check" style="font-size: 28px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Card -->
+<div class="card main-card">
+    <div class="card-body p-0">
+        <!-- Toolbar -->
+        <div class="p-4 border-bottom" style="background: #fafbfc;">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-white border-right-0" style="border-radius: 10px 0 0 10px;">
+                                <i class="bx bx-search text-muted"></i>
+                            </span>
+                        </div>
+                        <input type="text" id="assetSearch" class="form-control border-left-0 search-box" 
+                               placeholder="Search by asset no, description, serial or model..." style="border-radius: 0 10px 10px 0;">
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-right">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary" id="filterAll" style="border-radius: 8px 0 0 8px;">
+                            <i class="bx bx-list-ul mr-1"></i>All
+                        </button>
+                        <button type="button" class="btn btn-outline-success" id="filterActive">
+                            <i class="bx bx-check mr-1"></i>Active
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="filterInactive" style="border-radius: 0 8px 8px 0;">
+                            <i class="bx bx-pause mr-1"></i>Inactive
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table id="assetsTable" class="table table-hover mb-0" style="font-size: 14px;">
+                <thead class="table-header">
+                    <tr>
+                        <th style="width: 70px;"></th>
+                        <th>Asset</th>
+                        <th>Category</th>
+                        <th>Serial / Model</th>
+                        <th>Assigned To</th>
+                        <th class="text-center" style="width: 100px;">Status</th>
+                        <th class="text-center" style="width: 140px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model?.Any() != true)
+                    {
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">
+                                        <i class="bx bx-package" style="font-size: 36px; color: #9ca3af;"></i>
+                                    </div>
+                                    <h5 class="text-muted mb-2">No Assets Found</h5>
+                                    <p class="text-muted mb-3">Get started by adding your first asset</p>
+                                    <a asp-action="Create" class="btn btn-primary" style="border-radius: 8px;">
+                                        <i class="bi bi-plus-lg mr-2"></i>Add Asset
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var bgColors = new[] { "#667eea", "#764ba2", "#11998e", "#38ef7d", "#f093fb", "#f5576c", "#fa709a", "#fee140" };
+                            var bgColor = bgColors[Math.Abs(item.Id.GetHashCode()) % bgColors.Length];
+                            var categoryIcon = item.Category?.Description?.ToLower() switch
+                            {
+                                var c when c?.Contains("computer") == true || c?.Contains("laptop") == true => "bx-laptop",
+                                var c when c?.Contains("phone") == true || c?.Contains("mobile") == true => "bx-mobile",
+                                var c when c?.Contains("furniture") == true => "bx-chair",
+                                var c when c?.Contains("vehicle") == true => "bx-car",
+                                _ => "bx-package"
+                            };
+                            
+                            var statusClass = item.Status?.Description?.ToLower() switch
+                            {
+                                "active" => "badge-success",
+                                "inactive" => "badge-secondary",
+                                "damaged" => "badge-danger",
+                                "disposed" => "badge-dark",
+                                _ => "badge-light"
+                            };
+                            
+                            <tr class="asset-row" data-status="@item.Status?.Description?.ToLower()">
+                                <td class="text-center">
+                                    <div class="asset-icon" style="background: @bgColor;">
+                                        <i class="bx @categoryIcon"></i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <span style="font-weight: 600; color: #2d3748; font-size: 15px;">@item.Description</span>
+                                        <small class="text-muted">
+                                            <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-size: 11px;">@item.AssetNo</span>
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="category-badge">@item.Category?.Description</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <small><i class="bx bx-barcode mr-1 text-muted"></i>@item.SerialNo</small>
+                                        <small class="text-muted"><i class="bx bx-cog mr-1"></i>@item.Model</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.ResponsibleEmployee != null)
+                                    {
+                                        <span class="text-muted"><i class="bx bx-user mr-1"></i>@item.ResponsibleEmployee.FullName</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted"><i class="bx bx-user-x mr-1"></i>Unassigned</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge status-badge @statusClass">@item.Status?.Description</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Details" asp-route-id="@item.Id" 
+                                           class="btn btn-outline-info action-btn" 
+                                           data-toggle="tooltip" title="View Details">
+                                            <i class="bx bx-show"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" 
+                                           class="btn btn-outline-primary action-btn" 
+                                           data-toggle="tooltip" title="Edit Asset">
+                                            <i class="bx bx-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" 
+                                           class="btn btn-outline-danger action-btn" 
+                                           data-toggle="tooltip" title="Delete Asset">
+                                            <i class="bx bx-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        @if (totalAssets > 0)
+        {
+            <div class="p-3 border-top" style="background: #fafbfc;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        Showing <strong>@totalAssets</strong> asset@(totalAssets != 1 ? "s" : "")
+                    </small>
+                    <small class="text-muted" id="filteredCount"></small>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            // Search functionality
+            $('#assetSearch').on('keyup', function() {
+                var value = $(this).val().toLowerCase();
+                filterTable(value, true);
+            });
+            
+            // Filter buttons
+            $('#filterAll').click(function() {
+                filterTable($('#assetSearch').val().toLowerCase(), true);
+                $(this).removeClass('btn-outline-secondary').addClass('btn-secondary');
+                $('#filterActive, #filterInactive').removeClass('btn-success btn-secondary').addClass('btn-outline-success btn-outline-secondary');
+            });
+            
+            $('#filterActive').click(function() {
+                filterTable($('#assetSearch').val().toLowerCase(), false, 'active');
+                $(this).removeClass('btn-outline-success').addClass('btn-success');
+                $('#filterAll, #filterInactive').removeClass('btn-secondary btn-warning').addClass('btn-outline-secondary');
+            });
+            
+            $('#filterInactive').click(function() {
+                filterTable($('#assetSearch').val().toLowerCase(), false, 'inactive');
+                $(this).removeClass('btn-outline-secondary').addClass('btn-warning');
+                $('#filterAll, #filterActive').removeClass('btn-secondary btn-success').addClass('btn-outline-secondary btn-outline-success');
+            });
+            
+            function filterTable(searchText, showAll, statusFilter) {
+                var visibleCount = 0;
+                $('.asset-row').each(function() {
+                    var row = $(this);
+                    var text = row.text().toLowerCase();
+                    var status = row.data('status');
+                    
+                    var matchesSearch = text.indexOf(searchText) > -1;
+                    var matchesStatus = showAll || status === statusFilter;
+                    
+                    if (matchesSearch && matchesStatus) {
+                        row.show();
+                        visibleCount++;
+                    } else {
+                        row.hide();
+                    }
+                });
+                
+                $('#filteredCount').text(visibleCount !== @totalAssets ? 'Filtered: ' + visibleCount + ' shown' : '');
+            }
+        });
+    </script>
+}
+

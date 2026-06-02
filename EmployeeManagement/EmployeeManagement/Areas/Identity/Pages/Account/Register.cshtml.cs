@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
@@ -73,6 +74,34 @@ namespace EmployeeManagement.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            
+            // Custom validations
+            if (!string.IsNullOrEmpty(Input.Email))
+            {
+                // Check if email format is valid
+                var emailAttribute = new EmailAddressAttribute();
+                if (!emailAttribute.IsValid(Input.Email))
+                {
+                    ModelState.AddModelError(string.Empty, "Please enter a valid email address.");
+                    return Page();
+                }
+
+                // Check if email already exists (use FirstOrDefault to handle duplicates)
+                var existingUsers = await _userManager.Users.Where(u => u.Email == Input.Email).ToListAsync();
+                if (existingUsers.Any())
+                {
+                    ModelState.AddModelError(string.Empty, "This email address is already registered. Please use a different email or try logging in.");
+                    return Page();
+                }
+            }
+
+            // Check if passwords match
+            if (Input.Password != Input.ConfirmPassword)
+            {
+                ModelState.AddModelError(string.Empty, "Passwords do not match. Please make sure both passwords are identical.");
+                return Page();
+            }
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
